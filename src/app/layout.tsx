@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 // Імпортуємо наші нові компоненти!
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { MainContent } from '@/components/layout/MainContent';
+import { Header } from './components/layout/Header';
+import { Sidebar } from './components/layout/Sidebar';
+import { MainContent } from './components/layout/MainContent';
 
 export const metadata: Metadata = {
   title: 'QuestLog',
