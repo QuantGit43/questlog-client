@@ -42,7 +42,7 @@ export default function Home() {
       <h1>QuestLog Client</h1>
       <hr />
       <h2>API Connection Test:</h2>
-      <p style={{ fontFamily: 'monospace', background: '#eee', padding: '1rem' }}>
+      <p style={{ fontFamily: 'monospace', background: '#000', padding: '1rem' }}>
         <strong>Status: </strong> {apiMessage}
       </p>
     </main>
