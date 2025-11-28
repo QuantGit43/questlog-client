@@ -4,9 +4,9 @@ type MainContentProps = {
   children: React.ReactNode;
 };
 
-export const MainContent = ({ children }: MainContentProps) => {
+export const MainContent = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
+    <main className="flex-1 w-full font-pixel relative">
       {children}
     </main>
   );

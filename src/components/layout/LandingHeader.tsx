@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image'; 
-import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
 export const LandingHeader = () => {
@@ -12,13 +11,8 @@ export const LandingHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -33,47 +27,40 @@ export const LandingHeader = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-transparent",
-        isScrolled ? "bg-gray-900/80 backdrop-blur-md border-white/10 py-3" : "bg-transparent py-6"
+        "fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b font-pixel tracking-wide",
+        isScrolled 
+          ? "bg-[#2d1b4e]/80 backdrop-blur-md border-white/10 py-3 shadow-lg" // Напівпрозорий + розмиття
+          : "bg-transparent border-transparent py-6"       // Прозорий, коли нагорі
       )}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative w-70 h-10 transform group-hover:scale-110 transition-transform duration-200">
+        <Link href="/" className="flex items-center space-x-4 group">
+            <div className="relative w-40 h-10 transform group-hover:scale-105 transition-transform duration-200">
                 <Image 
                     src="/icons/logo.svg"  
                     alt="QuestLog Logo"
                     fill
-                    className="object-contain" 
+                    className="object-contain object-left" 
                 />
             </div>
         </Link>
-        <nav className="hidden md:flex items-center space-x-8">
+
+       {/* NAV LINKS */}
+        <nav className="hidden md:flex items-center space-x-12 ml-auto">
           {navLinks.map((link) => (
             <Link 
               key={link.name} 
               href={link.href} 
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors relative group"
+              className="text-lg text-white hover:text-purple-200 transition-colors relative group drop-shadow-md py-2"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-500 transition-all group-hover:w-full" />
+ 
+              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-purple-300 transition-all duration-300 ease-in-out group-hover:w-full"></span>
             </Link>
           ))}
-
-          <div className="ml-4 flex items-center space-x-4">
-             <Link 
-                href="/login" 
-                className="text-sm font-bold text-white hover:text-purple-300 transition-colors"
-             >
-                Log In
-             </Link>
-             <Link href="/signup">
-                <Button variant="primary" className="px-6 py-2 text-sm">
-                  Sign Up
-                </Button>
-             </Link>
-          </div>
         </nav>
+
+        {/* MOBILE BUTTON */}
         <div className="md:hidden">
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -91,36 +78,25 @@ export const LandingHeader = () => {
           </button>
         </div>
       </div>
+
+      {/* MOBILE MENU */}
       <div 
         className={cn(
-            "md:hidden absolute top-full left-0 w-full bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-300 ease-in-out overflow-hidden",
+            "md:hidden absolute top-full left-0 w-full bg-[#2d1b4e]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-300 ease-in-out overflow-hidden",
             isMobileMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="px-6 py-8 flex flex-col space-y-4 items-center text-center">
+        <div className="px-6 py-8 flex flex-col space-y-4 items-center text-center font-pixel">
           {navLinks.map((link) => (
             <Link 
               key={link.name} 
               href={link.href}
-              className="text-lg font-medium text-white hover:text-purple-400 transition-colors w-full py-2 border-b border-white/5"
+              className="text-xl text-white hover:text-purple-300 transition-colors w-full py-2 border-b border-white/5"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {link.name}
             </Link>
           ))}
-          
-          <div className="flex flex-col w-full space-y-3 pt-4">
-            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                <span className="block text-white font-bold py-2 hover:text-purple-300 transition-colors">
-                    Log In
-                </span>
-            </Link>
-            <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="primary" className="w-full">
-                    Sign Up Free
-                </Button>
-            </Link>
-          </div>
         </div>
       </div>
     </header>
