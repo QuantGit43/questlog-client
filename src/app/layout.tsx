@@ -1,12 +1,18 @@
 import type { Metadata } from 'next';
+import { Press_Start_2P, VT323 } from 'next/font/google'; 
 import './globals.css';
-
 import { MainContent } from '@/components/layout/MainContent';
+
+const pixelFont = VT323({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-pixel',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'QuestLog',
-  description: 'Гейміфікуй своє життя',
-  manifest: '/manifest.json',
+  description: 'Turn Your Life into an Epic RPG',
 };
 
 export default function RootLayout({
@@ -16,16 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk">
-      <head>
-        <meta name="theme-color" content="#111827" />
-      </head>
-      <body>
-        <div className="flex h-screen bg-gray-100">    
-          <div className="flex-1 flex flex-col overflow-hidden">          
+      <body className={`${pixelFont.variable} antialiased bg-[#2d1b4e]`}>
+        <div className="flex min-h-screen flex-col">    
             <MainContent>
               {children}
             </MainContent>
-          </div>
         </div>
       </body>
     </html>
