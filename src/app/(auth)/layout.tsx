@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import GlassCard from "@/components/GlassCard";
+import GlassCard from "@/components/ui/GlassCard";
 import { ArrowLeft } from "lucide-react";
 
 interface AuthLayoutProps {
@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     <div className="relative w-full h-screen">
       {/* Background Image */}
       <Image
-        src="/images/pixel-mountain-bg.png"
+        src="/images/main_background.svg"
         alt="Pixel Mountain Background"
         fill
         className="object-cover"
