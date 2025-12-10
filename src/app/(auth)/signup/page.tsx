@@ -5,12 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { authService } from "@/services/authService"; // Твій сервіс
+import { authService } from "@/services/authService";
 
 export default function SignupPage() {
   const router = useRouter();
 
-  // 1. Стейт для трьох полів
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,14 +30,12 @@ export default function SignupPage() {
 
       console.log("Реєстрація успішна!");
       
-      // 3. Після успішної реєстрації зазвичай перекидаємо на логін,
+      // 3. Після успішної реєстрації перекидаємо на логін,
       // щоб юзер ввів дані ще раз і отримав токен.
      router.push("/login");
 
     } catch (err: any) {
       console.error("Помилка реєстрації:", err);
-      // Відображаємо помилку (наприклад, "Такий email вже зайнятий")
-      // Часто бекенд повертає текст помилки в err.response.data
       setError("Помилка реєстрації. Можливо, такий користувач вже існує."); 
     }
   };
