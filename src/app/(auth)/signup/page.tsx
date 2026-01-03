@@ -21,22 +21,22 @@ export default function SignupPage() {
     setError("");
 
     try {
-      // 2. Викликаємо метод register
+      // Викликаємо сервіс. Він сам збереже токен в 'accessToken'
       await authService.register({
-        username,
-        email,
-        password
+        username: username,
+        email: email,
+        password: password,
       });
 
       console.log("Реєстрація успішна!");
       
-      // 3. Після успішної реєстрації перекидаємо на логін,
-      // щоб юзер ввів дані ще раз і отримав токен.
-     router.push("/login");
+      // Просто переходимо на дашборд
+      router.push("/dashboard");
 
     } catch (err: any) {
       console.error("Помилка реєстрації:", err);
-      setError("Помилка реєстрації. Можливо, такий користувач вже існує."); 
+      // Відображаємо повідомлення про помилку
+      setError(err.response?.data?.message || "Помилка реєстрації. Спробуйте ще раз."); 
     }
   };
 

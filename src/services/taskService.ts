@@ -9,7 +9,7 @@ import { Task, CreateTaskRequest, UpdateTaskRequest } from '@/types/tasks';
         },
 
         async create(data:CreateTaskRequest) {
-            const responce = await apiClient.post<Task>('api/tasks/', data);
+            const responce = await apiClient.post<Task>('api/tasks', data);
             return responce.data;
         },
 
@@ -19,7 +19,7 @@ import { Task, CreateTaskRequest, UpdateTaskRequest } from '@/types/tasks';
         },
 
         async delete(id:string) {
-            await apiClient.delete<void>('api/tasks/${id}');
+            await apiClient.delete<void>(`/api/tasks/${id}`);
         }
     };
     
