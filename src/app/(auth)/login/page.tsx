@@ -32,7 +32,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
 
       // Перенаправляємо користувача на головну сторінку
-      router.push("/"); 
+      router.push("/dashboard"); 
 
     } catch (err: any) {
       console.error("Помилка входу:", err);
