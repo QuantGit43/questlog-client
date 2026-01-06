@@ -1,15 +1,18 @@
 import type { Metadata } from 'next';
+import { Press_Start_2P, VT323 } from 'next/font/google'; 
 import './globals.css';
+import { MainContent } from '@/components/layout/MainContent';
 
-// Імпортуємо наші нові компоненти!
-import { Header } from './components/layout/Header';
-import { Sidebar } from './components/layout/Sidebar';
-import { MainContent } from './components/layout/MainContent';
+const pixelFont = VT323({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-pixel',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'QuestLog',
-  description: 'Гейміфікуй своє життя',
-  manifest: '/manifest.json',
+  description: 'Turn Your Life into an Epic RPG',
 };
 
 export default function RootLayout({
@@ -19,31 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk">
-      <head>
-        <meta name="theme-color" content="#111827" /> {/* Темний колір, як у сайдбара */}
-      </head>
-      <body>
-        {/* Ми використовуємо Flexbox, щоб створити "святий грааль" лейаут.
-          h-screen = повна висота екрану
-          flex = увімкнути flexbox
-        */}
-        <div className="flex h-screen bg-gray-100">
-          
-          {/* 1. Наш Сайдбар (ліворуч, фіксований) */}
-          <Sidebar />
-
-          {/* 2. Контейнер для Хедера та Контенту (праворуч) */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            
-            {/* 2a. Наш Хедер (зверху) */}
-            <Header />
-
-            {/* 2b. Наш Головний Контент (решта простору) */}
+      <body className={`${pixelFont.variable} antialiased bg-[#2d1b4e]`}>
+        <div className="flex min-h-screen flex-col">    
             <MainContent>
-              {children} {/* <--- Сюди потрапить ваш page.tsx */}
+              {children}
             </MainContent>
-
-          </div>
         </div>
       </body>
     </html>
