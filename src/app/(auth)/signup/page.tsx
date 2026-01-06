@@ -21,21 +21,21 @@ export default function SignupPage() {
     setError("");
 
     try {
-      // Викликаємо сервіс. Він сам збереже токен в 'accessToken'
+      // 1. Реєструємо користувача
       await authService.register({
         username: username,
         email: email,
         password: password,
       });
 
-      console.log("Реєстрація успішна!");
+      console.log("Реєстрація успішна! Перенаправлення на логін...");
       
-      // Просто переходимо на дашборд
-      router.push("/dashboard");
+      // 2. Перенаправляємо на сторінку входу
+      // Можна додати параметр, щоб показати повідомлення на логіні, наприклад: /login?registered=true
+      router.push("/login");
 
     } catch (err: any) {
       console.error("Помилка реєстрації:", err);
-      // Відображаємо повідомлення про помилку
       setError(err.response?.data?.message || "Помилка реєстрації. Спробуйте ще раз."); 
     }
   };
