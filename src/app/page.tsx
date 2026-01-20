@@ -1,4 +1,4 @@
-import { LandingHeader } from '@/components/layout/LandingHeader';
+import LandingHeader from '@/components/layout/LandingHeader';
 import { HeroSection } from '@/components/layout/HeroSection';
 
 export default function LandingPage() {

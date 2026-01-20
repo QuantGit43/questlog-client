@@ -21,7 +21,6 @@ export default function SignupPage() {
     setError("");
 
     try {
-      // 1. Реєструємо користувача
       await authService.register({
         username: username,
         email: email,
@@ -30,8 +29,6 @@ export default function SignupPage() {
 
       console.log("Реєстрація успішна! Перенаправлення на логін...");
       
-      // 2. Перенаправляємо на сторінку входу
-      // Можна додати параметр, щоб показати повідомлення на логіні, наприклад: /login?registered=true
       router.push("/login");
 
     } catch (err: any) {
