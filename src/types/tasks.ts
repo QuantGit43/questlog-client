@@ -3,20 +3,19 @@ export interface Task {
     title: string;
     description?: string;
     isCompleted: boolean;
-    type: string;        // Було tasktype
-    xpReward: number;    // Було xpreward
-    goldReward: number;  // Було goldreward
-    dueDate?: string;    // Було duedate
-    createdAt?: string;  // Корисно додати
+    type: string;
+    xpReward: number;
+    goldReward: number;
+    difficulty: string; // Додано для відображення складності від AI
+    dueDate?: string;
+    createdAt?: string;
 }
 
-// Також варто оновити CreateTaskRequest, щоб він відповідав тому, що чекає бекенд
 export interface CreateTaskRequest {
     title: string;
     description?: string;
     type: string;
-    xpReward: number;
-    goldReward: number;
+    // Нагороди прибираємо, бо їх тепер призначає бекенд через AI
     dueDate?: string;
 }
 
@@ -24,9 +23,14 @@ export interface UpdateTaskRequest {
     title?: string;
     description?: string;
     isCompleted?: boolean;
-    tasktype?: string;
-    xpreward?: number;
-    goldreward?: number;
-    duedate?: string;
+    type?: string;
+    xpReward?: number;
+    goldReward?: number;
+    dueDate?: string;
 }
 
+export interface TaskComplexityResponse {
+    difficulty: string;
+    xpReward: number;   // Було xp
+    goldReward: number; // Було gold
+}
