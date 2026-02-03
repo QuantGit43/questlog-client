@@ -65,7 +65,6 @@ export const HeroSection = () => {
         </div>
 
         {/* --- ТЕКСТ --- */}
-        {/* Додав relative z-30, щоб текст точно був поверх островів, якщо вони налізуть одне на одного */}
         <div className="relative z-30 mt-10 md:mt-0 mb-10 md:mb-20">
         <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-wide leading-tight text-white drop-shadow-[3px_2px_0_#000]">
           Turn Your Life into an <br className="hidden md:block" /> Epic RPG.

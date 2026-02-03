@@ -13,7 +13,7 @@ apiClient.interceptors.request.use(
     (config) => {
         // Перевіряємо, чи ми у браузері, перед доступом до localStorage
         if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('accessToken');
+            const token = localStorage.getItem('token');
             
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
