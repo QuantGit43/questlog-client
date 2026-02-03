@@ -15,25 +15,37 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
-      await authService.register({
-        username: username,
-        email: email,
-        password: password,
-      });
+      // 1. Реєстрація
+      await authService.register({ username, email, password });
 
-      console.log("Реєстрація успішна! Перенаправлення на логін...");
+      // 2. Авто-Логін (отримуємо токен відразу)
+      const loginData = await authService.login({ email, password });
+
+      // 3. Збереження сесії
+      if (loginData.token) {
+        localStorage.setItem("token", loginData.token);
+        // Зберігаємо інфо про юзера, щоб потім перевіряти стан
+        localStorage.setItem("user", JSON.stringify(loginData.user));
+      }
+
+      console.log("Реєстрація успішна! Перехід до вибору класу...");
       
-      router.push("/login");
+      // 4. ПЕРЕНАПРАВЛЕННЯ НА ВИБІР КЛАСУ
+      router.push("/class-selection");
 
     } catch (err: any) {
-      console.error("Помилка реєстрації:", err);
+      console.error("Помилка:", err);
       setError(err.response?.data?.message || "Помилка реєстрації. Спробуйте ще раз."); 
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -41,7 +53,7 @@ export default function SignupPage() {
     <div className="flex flex-col justify-center items-center h-full w-full text-center">
       <h1 className="text-4xl font-pixel mb-3">Sign Up</h1>
       
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {error && <div className="text-red-500 mb-4 bg-red-900/20 p-2 rounded">{error}</div>}
 
       <p className="text-sm text-gray-300 mb-6">
         Already have an account?{" "}
@@ -55,21 +67,24 @@ export default function SignupPage() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
         <Input
           placeholder="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <Input
           placeholder="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <Button variant="arrow" type="submit" className="w-full mt-2">
-          Create Account
+        <Button variant="arrow" type="submit" className="w-full mt-2" disabled={isLoading}>
+          {isLoading ? "Creating..." : "Create Account"}
         </Button>
       </form>
     </div>

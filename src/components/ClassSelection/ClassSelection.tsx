@@ -1,12 +1,14 @@
 ﻿'use client';
 
 import React, { useState } from 'react';
-import './ClassSelection.css';
+import { useRouter } from 'next/navigation';
+import { authService } from '@/services/authService';
+import './ClassSelection.css'; // Твій CSS файл
 
-// ДАННЫЕ КЛАССОВ (Кавычки убраны)
+// ДАНІ КЛАСІВ
 const CLASS_DATA = [
     {
-        id: 1,
+        id: 1, // Переконайся, що ці ID збігаються з ID в базі даних (якщо вони там є)
         title: 'The Healer',
         description: 'Your path is to maintain a balance between body and spirit. Your quests revolve around self-care: proper nutrition, adequate sleep, meditation, and stress management',
         imageSrc: '/images/avatar_healer.png'
@@ -31,24 +33,41 @@ const CLASS_DATA = [
     }
 ];
 
-const ClassSelection = () => {
+const ClassSelectionPage = () => {
+    const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClass, setSelectedClass] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSelectClass = (item: any) => {
         setSelectedClass(item);
         setIsModalOpen(false);
     };
 
-    const handleEmbraceJourney = () => {
-        alert(`Journey started as ${selectedClass.title}!`);
-        // Здесь будет логика перехода на следующую страницу или сохранение в базу
+    const handleEmbraceJourney = async () => {
+        if (!selectedClass) return;
+        setIsLoading(true);
+
+        try {
+            // 1. Відправляємо запит на бекенд для створення аватара/вибору класу
+            await authService.selectClass(selectedClass.id, selectedClass.title);
+            
+            console.log(`User selected class: ${selectedClass.title}`);
+            
+            // 2. Успіх -> Переходимо на Дашборд
+            router.push('/dashboard');
+            
+        } catch (error) {
+            console.error("Failed to select class:", error);
+            alert("Something went wrong with creating your hero. Try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <div className="class-selection-wrapper">
-
-            {/* Если класс выбран, показываем его название. Если нет - пусто или заголовок */}
+            {/* Текст обраного класу */}
             {selectedClass && (
                 <div style={{ textAlign: 'center', marginBottom: '30px', zIndex: 10, position: 'relative' }}>
                     <p style={{ color: 'white', fontFamily: 'monospace', fontSize: '1.5rem', textShadow: '2px 2px #000' }}>
@@ -57,10 +76,9 @@ const ClassSelection = () => {
                 </div>
             )}
 
-            {/* ЛОГИКА КНОПОК НА ГЛАВНОМ ЭКРАНЕ */}
+            {/* Кнопки головного екрану */}
             <div style={{ zIndex: 10, position: 'relative', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
 
-                {/* Сценарий 1: Класс ЕЩЕ НЕ выбран */}
                 {!selectedClass && (
                     <button
                         className="pixel-btn btn-blue"
@@ -70,19 +88,20 @@ const ClassSelection = () => {
                     </button>
                 )}
 
-                {/* Сценарий 2: Класс УЖЕ выбран */}
                 {selectedClass && (
                     <>
                         <button
                             className="pixel-btn btn-green"
                             onClick={handleEmbraceJourney}
+                            disabled={isLoading}
                         >
-                            EMBRACE YOUR JOURNEY!
+                            {isLoading ? "SUMMONING..." : "EMBRACE YOUR JOURNEY!"}
                         </button>
 
                         <button
                             className="pixel-btn btn-gray"
                             onClick={() => setIsModalOpen(true)}
+                            disabled={isLoading}
                         >
                             CHANGE CLASS
                         </button>
@@ -90,7 +109,7 @@ const ClassSelection = () => {
                 )}
             </div>
 
-            {/* МОДАЛЬНОЕ ОКНО ВЫБОРА */}
+            {/* МОДАЛКА (без змін логіки, тільки типи) */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content--wide">
@@ -103,7 +122,6 @@ const ClassSelection = () => {
                                     className="class-banner pixel-border-gold"
                                     onClick={() => handleSelectClass(item)}
                                 >
-                                    {/* Аватар */}
                                     <div className="banner-avatar-container pixel-border-inner">
                                         {item.imageSrc ? (
                                             <img src={item.imageSrc} alt={item.title} className="banner-avatar-img" />
@@ -112,7 +130,6 @@ const ClassSelection = () => {
                                         )}
                                     </div>
 
-                                    {/* Текст */}
                                     <div className="banner-text-container">
                                         <h3 className="banner-title">{item.title}</h3>
                                         <p className="banner-description">{item.description}</p>
@@ -134,4 +151,4 @@ const ClassSelection = () => {
     );
 };
 
-export default ClassSelection;
+export default ClassSelectionPage;

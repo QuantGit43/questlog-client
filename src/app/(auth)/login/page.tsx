@@ -13,30 +13,39 @@ export default function LoginPage() {
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
-      console.log("Спроба входу...", { email, password });
+      // 1. Логін
+      const data = await authService.login({ email, password });
 
-      const data = await authService.login({
-        email: email,
-        password: password,
-      });
+      // 2. Збереження токена
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
 
-      console.log("Успішний вхід:", data);
-      
-      // Тут зберігаються токен (data.token) у LocalStorage або Cookies
-      localStorage.setItem("token", data.token);
+      console.log("Вхід успішний:", data.user);
 
-      // Перенаправляємо користувача на головну сторінку
-      router.push("/dashboard"); 
+      // 3. РОЗУМНИЙ РОУТИНГ
+      // Перевіряємо поле hasAvatar (або classId), яке має повернути бекенд
+      if (data.user.hasAvatar) {
+          router.push("/dashboard"); 
+      } else {
+          // Якщо юзер зареєструвався, але закрив вкладку до вибору класу
+          router.push("/class-selection");
+      }
 
     } catch (err: any) {
       console.error("Помилка входу:", err);
-      setError("Невірний логін або пароль (або помилка сервера)");
+      setError(err.response?.data?.message || "Невірний логін або пароль.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,7 +53,7 @@ export default function LoginPage() {
     <div className="flex flex-col justify-center items-center h-full w-full text-center">
       <h1 className="text-4xl font-pixel mb-3">Log In</h1>
       
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {error && <div className="text-red-500 mb-4 bg-red-900/20 p-2 rounded">{error}</div>}
 
       <p className="text-sm text-gray-300 mb-6">
         New here?{" "}
@@ -59,15 +68,17 @@ export default function LoginPage() {
           type="email"    
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <Input
           placeholder="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <Button variant="arrow" type="submit" className="w-full mt-2">
-          Next
+        <Button variant="arrow" type="submit" className="w-full mt-2" disabled={isLoading}>
+          {isLoading ? "Loading..." : "Enter World"}
         </Button>
       </form>
     </div>

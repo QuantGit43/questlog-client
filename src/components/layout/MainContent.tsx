@@ -10,4 +10,4 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
       {children}
     </main>
   );
-};
+}; 
