@@ -196,24 +196,15 @@ export default function Page() {
           </RevealOnScroll>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             
-            {/* КРОКИ ЗЛІВА */}
             <div className="space-y-10">
               <RevealOnScroll delay={100}><Step num="1" title="Create Character" text="Sign up and start your journey instantly." /></RevealOnScroll>
               <RevealOnScroll delay={200}><Step num="2" title="Add Quests" text="Input your daily tasks. 'Clean Room' is now a Side Quest worth 50XP." /></RevealOnScroll>
               <RevealOnScroll delay={300}><Step num="3" title="Level Up" text="Complete tasks, gain levels, and unlock new features in your dashboard." /></RevealOnScroll>
             </div>
 
-            {/* СПРАВА: ВАША КАРТИНКА СУВОЮ З ЕФЕКТОМ */}
             <RevealOnScroll delay={400}>
               <div className="relative group flex justify-center">
-                {/* Ефект світіння позаду сувою */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[90%] bg-gradient-to-b from-purple-500 to-pink-500 rounded-lg blur-[60px] opacity-30 group-hover:opacity-50 transition duration-1000"></div>
-                
-                {/* ТУТ ВАША КАРТИНКА З ПОВЕРНУТИМ ЕФЕКТОМ:
-                    rotate-2 -> нахил на 2 градуси
-                    hover:rotate-0 -> вирівнювання при наведенні
-                    transition-all duration-500 -> плавність
-                */}
                 <div className="relative rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-500">
                     <Image 
                         src="/icons/menu.png" 
@@ -236,7 +227,7 @@ export default function Page() {
             <h2 className="text-4xl md:text-5xl text-white mb-10 drop-shadow-lg">
               Ready to Start the Adventure?
             </h2>
-            <a href="/dashboard">
+            <a href="/signup">
               <button 
                 className="
                   relative px-16 py-5 rounded-full 
