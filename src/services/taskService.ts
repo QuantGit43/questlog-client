@@ -51,5 +51,10 @@ export const taskService = {
             description 
         });
         return response.data;
-    }
+    },
+
+    async complete(id: string) {
+        const response = await apiClient.post<Task>(`api/tasks/${id}/complete`);
+        return response.data;
+    }   
 };
