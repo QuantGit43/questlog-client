@@ -245,8 +245,8 @@ export default function Page() {
           </section>
         </RevealOnScroll>
 
-        <footer className="text-center text-white/30 py-10 border-t border-white/10 text-sm bg-[#2d1b4e]">
-          <p>QuestLog v1.0 • Built with Next.js & Pixel Love</p>
+        <footer className="text-center text-white/30 py-10 border-t border-white/10 text-sm bg-[#0c0017]">
+          <p>QuestLog v1.0 • Built with Next.js & ASP.NET Core</p>
         </footer>
 
       </main>

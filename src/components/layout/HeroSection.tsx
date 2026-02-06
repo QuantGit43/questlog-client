@@ -34,7 +34,7 @@ export const HeroSection = () => {
         <div className="relative w-full max-w-4xl h-[300px] md:h-[450px] translate-y-12 md:translate-y-24 -mb-10">
             
             {/* Лівий острів */}
-            <div className="absolute bottom-[1%] left-[10%] md:left-[13%] w-48 md:w-110 h-auto aspect-square animate-float-slow">
+            <div className="absolute top-[10%] left-[10%] md:left-[10%] w-40 md:w-110 h-auto aspect-square animate-float-slow">
                  <Image 
                    src="/images/island_small.png" 
                    alt="Small Island"
@@ -45,7 +45,7 @@ export const HeroSection = () => {
             </div>
 
             {/* Правий острів */}
-            <div className="absolute bottom-[2%] right-[5%] md:right-[3%] w-56 md:w-130 h-auto aspect-square animate-float-delayed">
+            <div className="absolute bottom-[-15%] right-[5%] md:right-[0%] w-72 md:w-145 h-auto aspect-square animate-float-delayed">
                 <Image 
                    src="/images/island_big.png" 
                    alt="Big Island"
@@ -56,7 +56,7 @@ export const HeroSection = () => {
             </div>
 
             {/* Персонаж */}
-            <div className="absolute bottom-[73%] left-1/2 -translate-x-1/2 w-24 md:w-48 aspect-square z-50 animate-float">
+            <div className="absolute top-[-6%] left-[45%] -translate-x-1/2 w-24 md:w-48 aspect-square z-50 animate-float">
                 <Image 
                    src="/images/character.svg" 
                    alt="Hero Character"
