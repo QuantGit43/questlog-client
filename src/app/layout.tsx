@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Press_Start_2P, VT323 } from 'next/font/google'; 
 import './globals.css';
 import { MainContent } from '@/components/layout/MainContent';
+import LandingHeader from '@/components/layout/LandingHeader';
 
 const pixelFont = VT323({
   weight: '400',
@@ -23,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="uk">
       <body className={`${pixelFont.variable} antialiased bg-[#2d1b4e]`}>
-        <div className="flex min-h-screen flex-col">    
+        <div className="flex min-h-screen flex-col">   
             <MainContent>
               {children}
             </MainContent>
