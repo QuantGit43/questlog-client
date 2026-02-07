@@ -10,27 +10,39 @@ const CLASS_DATA = [
     {
         id: 1, // Переконайся, що ці ID збігаються з ID в базі даних (якщо вони там є)
         title: 'The Healer',
-        description: 'Your path is to maintain a balance between body and spirit. Your quests revolve around self-care: proper nutrition, adequate sleep, meditation, and stress management',
-        imageSrc: '/images/avatar_healer.png'
+        description: 'A guardian of life who mends wounds and cures ailments.',
+        imageSrc: '/images/avatar_healer.png',
+        animationSrc: '/images/avatar_healer.png',
+        heroCutout: '/images/hero_healer.png',
+        cssClass: 'hero-healer'
     },
     {
         id: 2,
         title: 'The Warrior',
-        description: 'Your quests are challenges that require willpower: regular training, adherence to a regimen, fighting bad habits, achieving difficult goals.',
-        imageSrc: '/images/avatar_warrior.png'
+        description: 'A master of martial arts and heavy weaponry.',
+        imageSrc: '/images/avatar_warrior.png',
+        animationSrc: '/images/avatar_warrior.png',
+        heroCutout: '/images/hero_warrior.png',
+        cssClass: 'hero-warrior'
     },
     {
         id: 3,
-        title: 'The Crafter',
-        description: 'Your passion is to build, create, and constantly improve. Your tasks are focused on completing projects, from learning a new language or skill to starting your own business or writing a book.',
-        imageSrc: '/images/avatar_crafter.png'
+        title: 'The Mage',
+        description: 'A scholar of the arcane arts, wielding elemental forces.',
+        imageSrc: '/images/avatar_mage.png',
+        animationSrc: '/images/avatar_mage.png',
+        heroCutout: '/images/hero_mage.png',
+        cssClass: 'hero-mage'
     },
     {
         id: 4,
-        title: 'The Mage',
-        description: 'Your path of continuous learning and intellectual development. Your quests are related to deepening knowledge: reading books, taking courses, studying complex topics, solving logical problems.',
-        imageSrc: '/images/avatar_mage.png'
-    }
+        title: 'The Crafter',
+        description: 'An artisan of unparalleled skill.',
+        imageSrc: '/images/avatar_crafter.png',
+        animationSrc: '/images/avatar_crafter.png',
+        heroCutout: '/images/hero_crafter.png',
+        cssClass: 'hero-crafter'
+    },
 ];
 
 const ClassSelectionPage = () => {
@@ -38,6 +50,7 @@ const ClassSelectionPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClass, setSelectedClass] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [hoveredClassId, setHoveredClassId] = useState<number | null>(null);
 
     const handleSelectClass = (item: any) => {
         setSelectedClass(item);
@@ -67,28 +80,45 @@ const ClassSelectionPage = () => {
 
     return (
         <div className="class-selection-wrapper">
-            {/* Текст обраного класу */}
-            {selectedClass && (
-                <div style={{ textAlign: 'center', marginBottom: '30px', zIndex: 10, position: 'relative' }}>
-                    <p style={{ color: 'white', fontFamily: 'monospace', fontSize: '1.5rem', textShadow: '2px 2px #000' }}>
-                        You are: <span style={{ color: '#ffd700' }}>{selectedClass.title}</span>
-                    </p>
-                </div>
-            )}
 
-            {/* Кнопки головного екрану */}
-            <div style={{ zIndex: 10, position: 'relative', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
+            {/* --- СЛОЙ ДЕКОРАЦИЙ --- */}
+            <div className="scene-container">
+                {/* ОСТРОВ СТРОИТЕЛЯ (prop-island.png) */}
+                <img src="/images/prop-island.png" alt="Builder Island" className="scene-prop prop-builder-island" />
 
-                {!selectedClass && (
-                    <button
-                        className="pixel-btn btn-blue"
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        CHOOSE YOUR CLASS!
-                    </button>
+                {/* ОСТРОВ ЦЕЛИТЕЛЯ (healer_island.png) */}
+                <img src="/images/healer_island.png" alt="Healer Island" className="scene-prop prop-healer-island" />
+
+                {/* ДРАКОН ВОИНА (dragon.png) */}
+                <img src="/images/dragon.png" alt="Dragon" className="scene-prop prop-dragon" />
+            </div>
+
+            {/* --- СЛОЙ ГЕРОЕВ --- */}
+            <div className="hero-overlay-container">
+                {CLASS_DATA.map((item) => (
+                    <img
+                        key={item.id}
+                        src={item.heroCutout}
+                        alt={item.title}
+                        className={`hero-overlay ${item.cssClass} ${(hoveredClassId === item.id || selectedClass?.id === item.id) ? 'visible' : ''
+                            }`}
+                    />
+                ))}
+            </div>
+
+            {/* --- ИНТЕРФЕЙС --- */}
+            <div className="ui-container">
+                {selectedClass && (
+                    <div className="selected-class-info">
+                        <p>You are: <span>{selectedClass.title}</span></p>
+                    </div>
                 )}
 
-                {selectedClass && (
+                {!selectedClass ? (
+                    <button className="pixel-btn btn-blue" onClick={() => setIsModalOpen(true)}>
+                        CHOOSE YOUR CLASS!
+                    </button>
+                ) : (
                     <>
                         <button
                             className="pixel-btn btn-green"
@@ -114,36 +144,33 @@ const ClassSelectionPage = () => {
                 <div className="modal-overlay">
                     <div className="modal-content--wide">
                         <h2 className="modal-title">SELECT YOUR DESTINY</h2>
-
                         <div className="class-banner-list">
-                            {CLASS_DATA.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="class-banner pixel-border-gold"
-                                    onClick={() => handleSelectClass(item)}
-                                >
-                                    <div className="banner-avatar-container pixel-border-inner">
-                                        {item.imageSrc ? (
-                                            <img src={item.imageSrc} alt={item.title} className="banner-avatar-img" />
-                                        ) : (
-                                            <div className="avatar-placeholder"></div>
-                                        )}
+                            {CLASS_DATA.map((item) => {
+                                const isHovered = hoveredClassId === item.id;
+                                return (
+                                    <div
+                                        key={item.id}
+                                        className={`class-banner pixel-border-gold ${isHovered ? 'is-hovered' : ''}`}
+                                        onClick={() => handleSelectClass(item)}
+                                        onMouseEnter={() => setHoveredClassId(item.id)}
+                                        onMouseLeave={() => setHoveredClassId(null)}
+                                    >
+                                        <div className="banner-avatar-container pixel-border-inner">
+                                            <img
+                                                src={isHovered ? item.animationSrc : item.imageSrc}
+                                                alt={item.title}
+                                                className={`banner-avatar-img ${isHovered ? 'animate-bounce' : ''}`}
+                                            />
+                                        </div>
+                                        <div className="banner-text-container pixel-border-inner">
+                                            <h3 className="banner-title">{item.title}</h3>
+                                            <p className="banner-description">{item.description}</p>
+                                        </div>
                                     </div>
-
-                                    <div className="banner-text-container">
-                                        <h3 className="banner-title">{item.title}</h3>
-                                        <p className="banner-description">{item.description}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
-
-                        <button
-                            className="pixel-btn btn-red"
-                            onClick={() => setIsModalOpen(false)}
-                        >
-                            CANCEL
-                        </button>
+                        <button className="pixel-btn btn-red" onClick={() => setIsModalOpen(false)}>CANCEL</button>
                     </div>
                 </div>
             )}
