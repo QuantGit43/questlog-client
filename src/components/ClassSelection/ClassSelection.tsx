@@ -1,11 +1,14 @@
-﻿'use client';
+﻿﻿'use client';
 
 import React, { useState } from 'react';
-import './ClassSelection.css';
+import { useRouter } from 'next/navigation';
+import { authService } from '@/services/authService';
+import './ClassSelection.css'; // Твій CSS файл
 
+// ДАНІ КЛАСІВ
 const CLASS_DATA = [
     {
-        id: 1,
+        id: 1, // Переконайся, що ці ID збігаються з ID в базі даних (якщо вони там є)
         title: 'The Healer',
         description: 'A guardian of life who mends wounds and cures ailments.',
         imageSrc: '/images/avatar_healer.png',
@@ -42,9 +45,11 @@ const CLASS_DATA = [
     },
 ];
 
-export default function ClassSelection() {
+const ClassSelectionPage = () => {
+    const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClass, setSelectedClass] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [hoveredClassId, setHoveredClassId] = useState<number | null>(null);
 
     const handleSelectClass = (item: any) => {
@@ -52,8 +57,25 @@ export default function ClassSelection() {
         setIsModalOpen(false);
     };
 
-    const handleEmbraceJourney = () => {
-        alert(`Journey started as ${selectedClass.title}!`);
+    const handleEmbraceJourney = async () => {
+        if (!selectedClass) return;
+        setIsLoading(true);
+
+        try {
+            // 1. Відправляємо запит на бекенд для створення аватара/вибору класу
+            await authService.selectClass(selectedClass.id, selectedClass.title);
+            
+            console.log(`User selected class: ${selectedClass.title}`);
+            
+            // 2. Успіх -> Переходимо на Дашборд
+            router.push('/dashboard');
+            
+        } catch (error) {
+            console.error("Failed to select class:", error);
+            alert("Something went wrong with creating your hero. Try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -98,17 +120,26 @@ export default function ClassSelection() {
                     </button>
                 ) : (
                     <>
-                        <button className="pixel-btn btn-green" onClick={handleEmbraceJourney}>
-                            EMBRACE YOUR JOURNEY!
+                        <button
+                            className="pixel-btn btn-green"
+                            onClick={handleEmbraceJourney}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? "SUMMONING..." : "EMBRACE YOUR JOURNEY!"}
                         </button>
-                        <button className="pixel-btn btn-gray" onClick={() => setIsModalOpen(true)}>
+
+                        <button
+                            className="pixel-btn btn-gray"
+                            onClick={() => setIsModalOpen(true)}
+                            disabled={isLoading}
+                        >
                             CHANGE CLASS
                         </button>
                     </>
                 )}
             </div>
 
-            {/* --- МОДАЛЬНОЕ ОКНО --- */}
+            {/* МОДАЛКА (без змін логіки, тільки типи) */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content--wide">
@@ -145,4 +176,6 @@ export default function ClassSelection() {
             )}
         </div>
     );
-}
+};
+
+export default ClassSelectionPage;

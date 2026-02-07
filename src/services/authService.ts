@@ -1,28 +1,43 @@
-import apiClient from '@/lib/apiClient';
-import { LoginRequest, LoginResponse, RegisterRequest } from '@/types/auth';
+import apiClient from "@/lib/apiClient";
+
+export interface LoginResponse {
+    token: string;
+    user: {
+        id: string;
+        email: string;
+        username: string;
+        // Важливо: бекенд має повертати це поле, щоб ми знали куди кидати юзера
+        hasAvatar: boolean; 
+    };
+}
 
 export const authService = {
-    async login(data: LoginRequest) {
-        // Отримуємо відповідь від сервера
-        const response = await apiClient.post<LoginResponse>('/api/auth/login', data);
-        
-        // === ВАЖЛИВО: ЗБЕРІГАЄМО ТОКЕН ===
-        // response.data — це об'єкт типу LoginResponse, де є поле token
-        if (response.data && response.data.token) {
-            localStorage.setItem('accessToken', response.data.token);
-        }
-        
+    // Реєстрація
+    async register(data: any) {
+        return await apiClient.post("/api/auth/register", data);
+    },
+
+    // Вхід
+    async login(data: any): Promise<LoginResponse> {
+        const response = await apiClient.post<LoginResponse>("/api/auth/login", data);
         return response.data;
     },
 
-    async register(data: RegisterRequest) {
-        const response = await apiClient.post('/api/auth/register', data);
+    // Вибір класу (Створення аватара)
+    async selectClass(classId: number, className: string) {
+        // Припускаємо, що на бекенді є ендпоінт для створення аватара
+        // Можливо, він називається /api/avatars
+        const response = await apiClient.post("/api/avatars", { 
+            classId: classId,
+            className: className
+        });
         return response.data;
     },
 
-    // Корисно додати метод виходу
+    // Вихід
     logout() {
-        localStorage.removeItem('accessToken');
-        // Тут можна додати редірект на сторінку логіну
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
     }
 };
