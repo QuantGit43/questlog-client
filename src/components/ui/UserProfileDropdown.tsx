@@ -10,7 +10,10 @@ type Props = {
 
 export default function UserProfileDropdown({ onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, onClose);
+  
+  // ВИПРАВЛЕННЯ: Додано "as React.RefObject<HTMLElement>"
+  // Це каже TypeScript: "Довіряй мені, це буде HTMLElement, а не null, коли хук запуститься"
+  useClickOutside(ref as React.RefObject<HTMLElement>, onClose);
 
   // MOCK DATA
   const user = {
