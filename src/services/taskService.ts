@@ -1,51 +1,59 @@
 import apiClient from '@/lib/apiClient';
-import { Task, CreateTaskRequest, UpdateTaskRequest, TaskComplexityResponse } from '@/types/tasks';
+import { 
+    Task, 
+    CreateTaskRequest, 
+    UpdateTaskRequest, 
+    TaskComplexityResponse,
+    UserProfile,
+    CompleteTaskResponse 
+} from '@/types/tasks';
 
 export const taskService = {
-    // Отримати всі завдання
-    async getAll() {
-    const response = await apiClient.get('api/tasks');
-    
-    // 1. Дивимося в консоль, щоб точно знати структуру (для дебагу)
-    console.log("API Response:", response.data);
+    // --- 1. ОТРИМАННЯ ВСІХ ЗАВДАНЬ ---
+    async getAll(): Promise<Task[]> {
+        // Переконайтеся, що URL відповідає вашому контролеру (api/tasks або api/task)
+        const response = await apiClient.get('api/tasks');
+        
+        // Логіка для обробки різних форматів відповіді (PagedList або Array)
+        if (response.data && Array.isArray(response.data.items)) {
+            return response.data.items;
+        }
 
-    // 2. Якщо це PagedList (має поле items), повертаємо items
-    if (response.data && Array.isArray(response.data.items)) {
-        return response.data.items;
-    }
+        if (Array.isArray(response.data)) {
+            return response.data;
+        }
 
-    // 3. Якщо це PagedList (іноді називають list або data), перевіряємо інші варіанти
-    // (Але зазвичай це items).
-    
-    // 4. Якщо це просто масив (раптом логіка зміниться)
-    if (Array.isArray(response.data)) {
+        return []; 
+    },
+
+    // --- 2. ПРОФІЛЬ ГРАВЦЯ (HP, Gold, XP) ---
+    async getUserProfile(): Promise<UserProfile> {
+        // ВАЖЛИВО: Цей ендпоінт має існувати на бекенді.
+        // Зазвичай це в AvatarsController -> GetCurrentAvatar
+        const response = await apiClient.get<UserProfile>('api/avatars/current'); 
+        console.log("ПРОФІЛЬ З БЕКЕНДУ:", response.data);
         return response.data;
-    }
+    },
 
-    // 5. Якщо нічого не підійшло - повертаємо пустий масив, щоб не ламати сайт
-    return []; 
-},
-
-    // Створити нове завдання
-    async create(data: CreateTaskRequest) {
+    // --- 3. СТВОРЕННЯ ЗАВДАННЯ ---
+    async create(data: CreateTaskRequest): Promise<Task> {
         const response = await apiClient.post<Task>('api/tasks', data);
         return response.data;
     },
 
-    // Оновити існуюче завдання
+    // --- 4. ОНОВЛЕННЯ ЗАВДАННЯ ---
     async update(id: string, data: UpdateTaskRequest): Promise<Task> {
-        // Виправлено: використано зворотні апострофи для інтерполяції
         const response = await apiClient.put<Task>(`api/tasks/${id}`, data);
         return response.data;
     },
 
-    // Видалити завдання
-    async delete(id: string) {
+    // --- 5. ВИДАЛЕННЯ ЗАВДАННЯ ---
+    async delete(id: string): Promise<void> {
         await apiClient.delete<void>(`api/tasks/${id}`);
     },
 
-    // МЕТОД ДЛЯ AI: Отримати превью складності та нагород
-    async analyzeComplexity(title: string, description?: string) {
+    // --- 6. AI АНАЛІЗ (Складність) ---
+    async analyzeComplexity(title: string, description?: string): Promise<TaskComplexityResponse> {
         const response = await apiClient.post<TaskComplexityResponse>('api/tasks/analyze-complexity', { 
             title, 
             description 
@@ -53,8 +61,11 @@ export const taskService = {
         return response.data;
     },
 
-    async complete(id: string) {
-        const response = await apiClient.post<Task>(`api/tasks/${id}/complete`);
+    // --- 7. ВИКОНАННЯ ЗАВДАННЯ ---
+    // Повертає нові значення золота та XP
+    async complete(id: string): Promise<CompleteTaskResponse> {
+        const response = await apiClient.post<CompleteTaskResponse>(`api/tasks/${id}/complete`);
         return response.data;
-    }   
+    },
+       
 };

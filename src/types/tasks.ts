@@ -23,14 +23,14 @@ export enum TaskCategory {
     SelfCare = 12 
 }
 
-// 2. Основна сутність завдання (те, що приходить у списку)
+// 2. Основна сутність завдання
 export interface Task {
     id: string;
     title: string;
     description?: string;
     isCompleted: boolean;
     type: string;          // "Daily", "Main"
-    category?: TaskCategory; // Категорія (може бути необов'язковою, якщо старі завдання її не мають)
+    category?: TaskCategory; 
     
     xpReward: number;      
     goldReward: number;    
@@ -40,16 +40,16 @@ export interface Task {
     createdAt?: string;
 }
 
-// 3. Запит на створення (тільки те, що вводить користувач)
+// 3. Запит на створення
 export interface CreateTaskRequest {
     title: string;
     description?: string;
     type: string;
-    category: TaskCategory; // <--- Тепер це обов'язкове поле
+    category: TaskCategory;
     dueDate?: string;
 }
 
-// 4. Відповідь від AI-аналізатора (для превью у формі)
+// 4. Відповідь від AI-аналізатора
 export interface TaskComplexityResponse {
     difficulty: string;
     xpReward: number;   
@@ -64,4 +64,23 @@ export interface UpdateTaskRequest {
     type?: string;
     category?: TaskCategory;
     dueDate?: string;
+}
+
+// --- НОВІ ТИПИ (Додайте це, щоб виправити помилки) ---
+
+// 6. Профіль користувача (для відображення зверху)
+export interface UserProfile {
+    username: string; // <--- Додано
+    gold: number;
+    xp: number;
+    hp: number;
+    level?: number;
+}
+
+// 7. Відповідь при виконанні завдання (нові баланси)
+export interface CompleteTaskResponse {
+    newGold: number;
+    newXp: number;
+    // Можна додати task, якщо бекенд повертає і саме завдання
+    // task?: Task; 
 }
