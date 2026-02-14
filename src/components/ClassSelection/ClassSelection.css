@@ -1,29 +1,12 @@
-﻿/* --- ГЛАВНЫЙ ФОН --- */
+﻿/* --- 1. ГЛАВНЫЙ ФОН --- */
 .class-selection-wrapper {
     width: 100vw;
     height: 100vh;
-    /* СЛОИ ФОНА (Сверху вниз): 
-       1. Герои (heroes.png) 
-       2. Горы (bg-mountains.png) 
-       3. Градиент неба 
-    */
-    background-image: url('/images/heroes.png'), url('/images/bg-mountains.png'), linear-gradient(to bottom, #6a3093 0%, #a044ff 40%, #ff6b6b 70%, #f9cb8f 100%);
-    /* РАЗМЕРЫ:
-       Герои: 100% ширины (растянуты по ширине), высота авто
-       Горы и Небо: cover (заполняют весь экран)
-    */
-    background-size: 100% auto, cover, cover;
-    /* ПОЗИЦИЯ: Герои и Горы снизу, Небо по центру */
-    background-position: center bottom, center bottom, center;
+    background-image: url('/images/background.png');
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-    /* === ВАРИАНТ 1: МАКСИМАЛЬНАЯ ЧЕТКОСТЬ CSS === */
-    /* Пытаемся заставить ВСЕ браузеры не сглаживать пиксели при растягивании */
-    image-rendering: -moz-crisp-edges; /* Firefox */
-    image-rendering: -webkit-optimize-contrast; /* Webkit (Safari/старый Chrome) */
-    image-rendering: pixelated; /* Современные Chrome, Edge, Opera */
-    -ms-interpolation-mode: nearest-neighbor; /* IE (на всякий случай) */
-    /* ========================================== */
-
+    image-rendering: pixelated;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -32,7 +15,170 @@
     position: relative;
 }
 
-/* --- МОДАЛЬНОЕ ОКНО --- */
+/* --- 2. СЛОЙ ДЕКОРАЦИЙ (Пропы) --- */
+.scene-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.scene-prop {
+    position: absolute;
+    object-fit: contain;
+}
+
+/* ОСТРОВ ЦЕЛИТЕЛЯ (Новый!) */
+.prop-healer-island {
+    top: 78%;
+    left: 0%;
+    width: 25vw; /* Чуть увеличил, чтобы герою было удобно */
+    max-width: 380px;
+    z-index: 2;
+    animation: floatIsland 6s ease-in-out infinite;
+}
+
+/* ОСТРОВ СТРОИТЕЛЯ (Большой) */
+.prop-builder-island {
+    top: 20%;
+    left: 12%;
+    width: 80vw;
+    max-width: 800px;
+    z-index: 1;
+    animation: floatIsland 8s ease-in-out infinite reverse;
+}
+
+/* ДРАКОН (Воина) */
+.prop-dragon {
+    top: 0%;
+    right: -2%;
+    width: 42vw;
+    max-width: 680px;
+    z-index: 2;
+    animation: floatDragon 5s ease-in-out infinite;
+}
+
+/* Анимации покачивания */
+@keyframes floatIsland {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes floatDragon {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-18px);
+    }
+}
+
+
+/* --- 3. СЛОЙ ГЕРОЕВ --- */
+.hero-overlay-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.hero-overlay {
+    position: absolute;
+    transition: all 0.3s ease-in-out;
+    filter: brightness(0.7);
+    opacity: 0.9;
+}
+
+    .hero-overlay.visible {
+        filter: brightness(1.1) drop-shadow(0 0 15px #ffd700);
+        transform: scale(1.05);
+        opacity: 1;
+        z-index: 10;
+    }
+
+/* --- КООРДИНАТЫ ГЕРОЕВ (Финальная подгонка) --- */
+
+/* ХИЛЕР (Стоит на новом healer_island.png) */
+.hero-healer {
+    top: 52%; /* Поставил на новый остров */
+    left: 10%; /* Центруем */
+    width: 24vh;
+    z-index: 6;
+    animation: floatIsland 7s ease-in-out infinite; /* Двигается с островом */
+}
+
+/* СТРОИТЕЛЬ (Стоит на prop-island.png) */
+.hero-crafter {
+    top: 39%;
+    left: 29%;
+    width: 11vh;
+    z-index: 5;
+    animation: floatIsland 8s ease-in-out infinite reverse;
+}
+
+/* ВОИН (Сидит на Драконе) */
+.hero-warrior {
+    top: 12%;
+    right: 15%;
+    width: 17vh;
+    transform: rotate(-10deg);
+    z-index: 6;
+    animation: floatDragon 5s ease-in-out infinite;
+}
+
+    .hero-warrior.visible {
+        transform: scale(1.05) rotate(-10deg);
+    }
+
+/* МАГ (Внизу справа) */
+.hero-mage {
+    bottom: -3%;
+    right: 12%;
+    width: 52vh;
+    z-index: 6;
+    animation: floatIsland 4s ease-in-out infinite;
+}
+
+
+/* --- UI (ИНТЕРФЕЙС) --- */
+.ui-container {
+    z-index: 20;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: 80px;
+}
+
+.selected-class-info p {
+    color: white;
+    font-family: monospace;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px #000;
+    background: rgba(0,0,0,0.6);
+    padding: 10px 20px;
+    border: 2px solid #5e4833;
+}
+
+.selected-class-info span {
+    color: #ffd700;
+}
+
+/* СТИЛИ МОДАЛКИ (Без изменений) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -52,21 +198,10 @@
     background: #2b2118;
     padding: 25px;
     border: 4px solid #c7a545;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
-    text-align: center;
-    width: 100%;
     max-width: 850px;
+    text-align: center;
     max-height: 90vh;
     overflow-y: auto;
-}
-
-.modal-title {
-    font-family: monospace;
-    color: #ffd700;
-    text-shadow: 2px 2px #000;
-    margin-bottom: 25px;
-    font-size: 1.8rem;
-    font-weight: bold;
 }
 
 .class-banner-list {
@@ -75,29 +210,22 @@
     gap: 15px;
 }
 
-/* --- БАННЕРЫ --- */
 .class-banner {
     display: flex;
-    flex-direction: row;
     background: #3b2d22;
     cursor: pointer;
-    transition: transform 0.1s, filter 0.1s;
+    transition: 0.2s;
     position: relative;
-    align-items: stretch;
 }
 
     .class-banner:hover {
+        background: #4a3b2f;
         transform: scale(1.02);
-        filter: brightness(1.1);
-    }
-
-    .class-banner:active {
-        transform: scale(0.98);
     }
 
 .pixel-border-gold {
     border: 4px solid #c7a545;
-    box-shadow: 3px 3px 0px #000;
+    box-shadow: 3px 3px 0 #000;
 }
 
 .pixel-border-inner {
@@ -106,12 +234,10 @@
 
 .banner-avatar-container {
     width: 130px;
-    flex-shrink: 0;
     background: #1a1510;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 5px;
     padding: 5px;
 }
 
@@ -125,94 +251,73 @@
 .banner-text-container {
     flex-grow: 1;
     padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     text-align: left;
-    background: #493b2e;
 }
 
-.banner-title {
-    font-family: monospace;
+.modal-title, .banner-title {
     color: #ffd700;
-    text-shadow: 1px 1px #000;
-    margin-bottom: 8px;
-    font-size: 1.2rem;
+    font-family: monospace;
     font-weight: bold;
 }
 
 .banner-description {
-    font-family: monospace;
     color: #e0d0c0;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    font-style: italic;
+    font-family: monospace;
 }
 
-/* --- ДИЗАЙН КНОПОК --- */
 .pixel-btn {
     font-family: monospace;
-    text-transform: uppercase;
     border: none;
     color: white;
     cursor: pointer;
-    box-shadow: 0px 6px 0px #000;
-    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 6px 0 #000;
     font-weight: bold;
 }
 
     .pixel-btn:active {
-        transform: translate(0px, 4px);
-        box-shadow: 0px 2px 0px #000;
+        transform: translateY(4px);
+        box-shadow: 0 2px 0 #000;
     }
 
-/* Синяя кнопка (Главная) */
 .btn-blue {
     background: #3b82f6;
     padding: 20px 40px;
-    font-size: 1.5rem;
     border: 4px solid #fff;
+    font-size: 1.5rem;
 }
 
-    .btn-blue:hover {
-        background: #60a5fa;
-    }
-
-/* Зеленая кнопка (Embrace) */
 .btn-green {
     background: #22c55e;
     padding: 15px 30px;
-    font-size: 1.3rem;
     border: 4px solid #fff;
     min-width: 300px;
+    font-size: 1.3rem;
 }
 
-    .btn-green:hover {
-        background: #4ade80;
-    }
-
-/* Серая кнопка (Change class) */
 .btn-gray {
     background: #6b7280;
     padding: 10px 20px;
-    font-size: 1rem;
     border: 3px solid #d1d5db;
     margin-top: 10px;
 }
 
-    .btn-gray:hover {
-        background: #9ca3af;
-    }
-
-/* Красная кнопка (Cancel) */
 .btn-red {
     background: #ef4444;
     padding: 10px 20px;
-    font-size: 1rem;
     border: 3px solid #fff;
     margin-top: 20px;
 }
 
-    .btn-red:hover {
-        background: #f87171;
+@keyframes pixelBounce {
+    0%, 100% {
+        transform: translateY(0);
     }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.banner-avatar-img.animate-bounce {
+    animation: pixelBounce 0.6s infinite ease-in-out;
+}

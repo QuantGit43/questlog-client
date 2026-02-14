@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { authService } from "@/services/authService";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SignupPage() {
-  const router = useRouter();
+  const { login } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -20,44 +20,56 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Валідація
+    if (password.length < 6) {
+      setError("Пароль має бути не менше 6 символів.");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError("Пароль має містити хоча б одну ВЕЛИКУ літеру!");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // 1. Реєстрація
-      await authService.register({ username, email, password });
+      const response = await authService.register({ username, email, password });
+      const data = response.data;
 
-      // 2. Авто-Логін (отримуємо токен відразу)
-      const loginData = await authService.login({ email, password });
-
-      // 3. Збереження сесії
-      if (loginData.token) {
-        localStorage.setItem("token", loginData.token);
-        // Зберігаємо інфо про юзера, щоб потім перевіряти стан
-        localStorage.setItem("user", JSON.stringify(loginData.user));
+      if (data && data.token) {
+        // Успішна реєстрація -> йдемо вибирати Клас
+        login(data.token, data, "/class-selection");
       }
-
-      console.log("Реєстрація успішна! Перехід до вибору класу...");
-      
-      // 4. ПЕРЕНАПРАВЛЕННЯ НА ВИБІР КЛАСУ
-      router.push("/class-selection");
-
     } catch (err: any) {
-      console.error("Помилка:", err);
-      setError(err.response?.data?.message || "Помилка реєстрації. Спробуйте ще раз."); 
+      console.error("Signup error:", err);
+      const status = err.response?.status;
+      const msg = err.response?.data?.message;
+
+      if (status === 409) setError("Користувач з таким логіном або поштою вже існує!");
+      else if (status === 400) setError(msg || "Невірні дані.");
+      else setError(msg || "Сталася помилка сервера.");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-full w-full text-center">
-      <h1 className="text-4xl font-pixel mb-3">Sign Up</h1>
-      
-      {error && <div className="text-red-500 mb-4 bg-red-900/20 p-2 rounded">{error}</div>}
+    <>
+      <h1 className="text-4xl font-pixel mb-3 text-white">Sign Up</h1>
+
+      {error && (
+        <div className="text-red-500 mb-4 bg-red-900/20 p-3 rounded text-sm border border-red-500/50 w-full animate-pulse">
+          {error}
+        </div>
+      )}
 
       <p className="text-sm text-gray-300 mb-6">
         Already have an account?{" "}
-        <Link href="/login" className="underline text-blue-400 hover:text-blue-300">
+        <Link 
+          href="/login" 
+          className="underline text-blue-400 hover:text-blue-300 transition-colors"
+        >
           Log In
         </Link>
       </p>
@@ -65,6 +77,7 @@ export default function SignupPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
         <Input
           placeholder="Username"
+          type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -82,11 +95,17 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          minLength={6}
         />
-        <Button variant="arrow" type="submit" className="w-full mt-2" disabled={isLoading}>
-          {isLoading ? "Creating..." : "Create Account"}
+        <Button 
+          variant="arrow" 
+          type="submit" 
+          className="w-full mt-2" 
+          disabled={isLoading}
+        >
+          {isLoading ? "Loading..." : "Create Account"}
         </Button>
       </form>
-    </div>
+    </>
   );
 }
