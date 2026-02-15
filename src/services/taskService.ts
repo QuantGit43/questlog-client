@@ -31,15 +31,19 @@ export const taskService = {
         // ВАЖЛИВО: Цей ендпоінт має існувати на бекенді.
         // Зазвичай це в AvatarsController -> GetCurrentAvatar
         const response = await apiClient.get<UserProfile>('api/avatars/current'); 
-        console.log("ПРОФІЛЬ З БЕКЕНДУ:", response.data);
         return response.data;
     },
 
     // --- 3. СТВОРЕННЯ ЗАВДАННЯ ---
-    async create(data: CreateTaskRequest): Promise<Task> {
-        const response = await apiClient.post<Task>('api/tasks', data);
-        return response.data;
-    },
+   async create(data: CreateTaskRequest): Promise<Task> {
+    // --- LOG 3: Перевірка перед самим запитом ---
+    console.log("3. [Service] POST request data:", data);
+    
+    const response = await apiClient.post<Task>('api/tasks', data);
+    
+    console.log("3.1 [Service] Raw Server Response:", response); // Глянути статус і дані
+    return response.data;
+},
 
     // --- 4. ОНОВЛЕННЯ ЗАВДАННЯ ---
     async update(id: string, data: UpdateTaskRequest): Promise<Task> {
@@ -66,6 +70,5 @@ export const taskService = {
     async complete(id: string): Promise<CompleteTaskResponse> {
         const response = await apiClient.post<CompleteTaskResponse>(`api/tasks/${id}/complete`);
         return response.data;
-    },
-       
+    },    
 };
