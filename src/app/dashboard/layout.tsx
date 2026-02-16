@@ -1,22 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-// Переконайтеся, що GameProvider імпортується правильно
 import { GameProvider, useGame } from "./context/GameContext"; 
 import { HeartDisplay } from "@/components/ui/HeartDisplay";
 import { ProfileScroll } from "./components/ProfileScroll";
 import { FloatingTextLayer } from "./components/FloatingTextLayer";
 
-// Цей компонент використовує хук useGame, тому він має бути ВНУТРІШНІМ
+// 1. Створюємо об'єкт для мапінгу іконок
+// Ключі мають бути в нижньому регістрі, щоб уникнути помилок, якщо в базі написано "Warrior"
+const CLASS_ICONS: Record<string, string> = {
+  warrior: "images/dashboard/warrior.png",
+  crafter: "images/dashboard/crafter.png",
+  mage: "images/dashboard/mage.png",
+  healer: "images/dashboard/healer.png",
+};
+
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { hp, gold, username, level, xp, controls, floatingTexts, setCreateQuestOpen } = useGame();
+  // 2. Додаємо userClass (або як у вас називається змінна класу) в деструктуризацію
+  const { hp, gold, username, level, xp, controls, floatingTexts, setCreateQuestOpen, userClass } = useGame(); 
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const router = useRouter();
 
   const xpProgress = xp % 100;
+
+  useEffect(() => {
+      console.log("🎨 [6. Layout] Current userClass in UI:", userClass);
+      console.log("🖼️ [7. Layout] Resolved Icon Path:", userClass ? CLASS_ICONS[userClass.toLowerCase()] : "None");
+  }, [userClass]);
+
+  // Визначаємо правильну іконку. 
+  // Використовуємо ?.toLowerCase(), щоб "Mage", "MAGE" і "mage" працювали однаково.
+  const currentClassIcon = userClass ? CLASS_ICONS[userClass.toLowerCase()] : null;
+
+  
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -29,12 +48,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       className="h-screen w-screen overflow-hidden bg-cover bg-center font-pixel text-white relative"
       style={{ backgroundImage: "url('/images/background.png')" }}
     >
-      {/* VIGNETTE (Low HP) */}
       {hp < 30 && (
         <div className="absolute inset-0 pointer-events-none border-[20px] border-red-600/40 animate-pulse z-40" />
       )}
 
-      {/* FLOATING TEXT LAYER */}
       <FloatingTextLayer items={floatingTexts} />
 
       {/* --- HEADER --- */}
@@ -60,12 +77,20 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="w-12 h-12 bg-[#3e2723] rounded-full border-2 border-white shadow-lg hover:scale-110 transition-transform active:scale-95 cursor-pointer overflow-hidden flex items-center justify-center"
           >
-             <span className="text-xl">🧙‍♂️</span>
+             {/* 3. Логіка відображення: якщо є іконка класу - показуємо її, інакше - емодзі */}
+             {currentClassIcon ? (
+               <img 
+                 src={currentClassIcon} 
+                 alt={userClass || "Hero"} 
+                 className="w-full h-full object-cover p-1" // p-1 щоб іконка не впиралася в краї
+               />
+             ) : (
+               <span className="text-xl">🧙‍♂️</span>
+             )}
           </button>
         </div>
       </div>
 
-      {/* --- PROFILE DRAWER --- */}
       {isProfileOpen && (
           <ProfileScroll 
             username={username} 
@@ -75,12 +100,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           />
       )}
 
-      {/* --- MAIN PAGE CONTENT --- */}
       <main className="relative w-full h-full pt-10">
         {children}
       </main>
 
-      {/* --- FOOTER NAV --- */}
       <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-6 z-40">
         <button onClick={() => router.push('/dashboard/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
           <img src="/images/Group shop.png" alt="Shop" className="h-20 w-auto object-contain" />
@@ -101,8 +124,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ГОЛОВНИЙ ЕКСПОРТ
-// Ми обгортаємо DashboardContent у GameProvider тут.
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <GameProvider>

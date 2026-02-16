@@ -30,15 +30,14 @@ export const TaskCard = ({ task, onClick }: TaskCardProps) => {
       }}
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center p-4 pt-6 text-center text-[#3e2723]">
-        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-red-800 shadow-sm border border-black/20"></div>
         <h3 className="text-[9px] font-bold leading-tight uppercase line-clamp-2 w-full">
           {task.title}
         </h3>
-        <div className="mt-1 flex flex-col items-center gap-0.5 bg-white/50 w-full rounded px-1 py-0.5 backdrop-blur-[1px]">
-          <span className="text-[8px] font-bold text-blue-900">
+        <div className="mt-1 flex flex-col items-center gap-0.5 w-full rounded px-1 py-0.5 backdrop-blur-[1px]">
+          <span className="text-[12px] font-bold text-blue-900">
             {task.xpReward} XP
           </span>
-          <span className="text-[7px] font-bold text-yellow-900">
+          <span className="text-[12px] font-bold text-yellow-900">
             {task.goldReward} G
           </span>
         </div>

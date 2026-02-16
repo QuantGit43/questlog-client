@@ -1,18 +1,5 @@
 import apiClient from "@/lib/apiClient";
-
-export interface LoginResponse {
-  token: string;
-
-  user: {
-    id: string;
-
-    email: string;
-
-    username: string;
-
-    hasAvatar: boolean;
-  };
-}
+import { LoginResponse } from "@/types/auth";
 
 export const authService = {
   // Реєстрація
@@ -34,14 +21,13 @@ export const authService = {
 
   // Вибір класу (Створення аватара)
 
-  async selectClass(classId: number, className: string) {
+  async selectClass(id: number, className: string) {
     // Припускаємо, що на бекенді є ендпоінт для створення аватара
 
     // Можливо, він називається /api/avatars
 
     const response = await apiClient.post("/api/avatars", {
-      classId: classId,
-
+      class: id,
       className: className,
     });
 

@@ -24,10 +24,10 @@ export enum TaskCategory {
 }
 
 export enum AvatarClass {
-  Warrior = 0,
-  Mage = 1,
-  Rogue = 2,
-  Cleric = 3
+  Healer = 1,
+  Warrior = 2,
+  Crafter = 3,
+  Mage = 4
 }
 
 export interface AvatarDto {
@@ -104,6 +104,7 @@ export interface UserProfile {
     xp: number;
     hp: number;
     level?: number;
+    class?: AvatarClass;
 }
 
 // 7. Відповідь при виконанні завдання (нові баланси)
