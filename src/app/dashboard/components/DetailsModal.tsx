@@ -1,7 +1,10 @@
 // app/dashboard/components/DetailsModal.tsx
+"use client"; // Додаємо, оскільки використовуємо хуки
+
 import { motion } from "framer-motion";
 import { Task } from "@/types/tasks";
 import { taskService } from "@/services/taskService";
+import { useGame } from "@/app/dashboard/context/GameContext"; // 1. Імпорт контексту
 
 interface DetailsModalProps {
   task: Task;
@@ -11,15 +14,26 @@ interface DetailsModalProps {
 }
 
 export const DetailsModal = ({ task, onClose, onComplete, onDelete }: DetailsModalProps) => {
-  
+  // 2. Дістаємо refreshProfile з контексту
+  const { refreshProfile } = useGame();
+
   const handleComplete = async (e: React.MouseEvent) => {
     try {
         const response = await taskService.complete(task.id);
         const earnedGold = (response as any).earnedGold ?? (response as any).EarnedGold ?? task.goldReward;
         const earnedXp = (response as any).earnedXp ?? (response as any).EarnedXp ?? task.xpReward;
+        
+        // Викликаємо колбек батька (для анімації золота/XP)
         onComplete(task, earnedGold, earnedXp);
+
+        // 3. Оновлюємо характеристики (Strength, Wisdom і т.д.)
+        await refreshProfile(); 
+        
+        // Закриваємо модалку після успіху (опціонально, але логічно)
+        onClose();
+        
     } catch (err) {
-        console.error(err);
+        console.error("Failed to complete task:", err);
     }
   };
 
@@ -27,8 +41,9 @@ export const DetailsModal = ({ task, onClose, onComplete, onDelete }: DetailsMod
       try {
           await taskService.delete(task.id);
           onDelete(task.id);
+          onClose(); // Закриваємо модалку після видалення
       } catch (err) {
-          console.error(err);
+          console.error("Failed to abandon task:", err);
       }
   }
 

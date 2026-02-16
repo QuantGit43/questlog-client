@@ -1,10 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useAnimation } from "framer-motion"; 
+import { useAnimation} from "framer-motion"; 
 import { taskService } from "@/services/taskService";
 import { UserProfile, AvatarClass } from "@/types/tasks"; 
-
 type AnimationControls = ReturnType<typeof useAnimation>;
 
 export interface FloatingTextItem {
@@ -22,6 +21,14 @@ interface GameContextType {
   level: number;
   username: string;
   userClass: string; 
+  
+  // --- 1. Додані характеристики ---
+  strength: number;
+  intellect: number;
+  dexterity: number;
+  wisdom: number;
+  // -------------------------------
+
   controls: AnimationControls;
   floatingTexts: FloatingTextItem[];
   refreshProfile: () => void;
@@ -33,24 +40,20 @@ interface GameContextType {
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-// Функція мапінгу (залишається такою ж)
+// Функція мапінгу
 const mapAvatarClassToString = (cls?: AvatarClass | string | number): string => {
   if (cls === undefined || cls === null) return "warrior";
-
-  // Якщо бекенд повертає рядок (наприклад, "Mage")
   if (typeof cls === 'string') {
       const lower = cls.toLowerCase();
-      if (lower === 'rogue') return 'crafter'; // Фікс для різниці назв
-      if (lower === 'cleric') return 'healer'; // Фікс для різниці назв
-      return lower; // "mage" -> "mage", "warrior" -> "warrior"
+      if (lower === 'rogue') return 'crafter';
+      if (lower === 'cleric') return 'healer';
+      return lower;
   }
-
-  // Якщо бекенд повертає число (Enum)
   switch (cls) {
-    case 1: return "healer";  // ID 1
-    case 2: return "warrior"; // ID 2
-    case 3: return "crafter"; // ID 3 (якщо в базі це Crafter/Rogue)
-    case 4: return "mage";    // ID 4
+    case 1: return "healer";
+    case 2: return "warrior";
+    case 3: return "crafter";
+    case 4: return "mage"; 
     default: return "warrior";
   }
 };
@@ -64,9 +67,18 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [xp, setXp] = useState(0);
   const [userClass, setUserClass] = useState("warrior");
 
+  // --- 2. Стейт для характеристик ---
+  const [strength, setStrength] = useState(1);
+  const [intellect, setIntellect] = useState(1);
+  const [dexterity, setDexterity] = useState(1);
+  const [wisdom, setWisdom] = useState(1);
+  // ----------------------------------
+
   const [floatingTexts, setFloatingTexts] = useState<FloatingTextItem[]>([]);
   const [isCreateQuestOpen, setCreateQuestOpen] = useState(false);
 
+  // Розрахунок рівня (якщо бекенд не повертає актуальний, можна залишити так, 
+  // але краще брати profile.level, якщо він є)
   const level = Math.floor(xp / 100) + 1;
 
   useEffect(() => {
@@ -76,10 +88,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const refreshProfile = async () => {
     try {
       console.log("🔄 [3. GameContext] Fetching user profile...");
+      const profile = await taskService.getUserProfile(); // Переконайтеся, що тип UserProfile включає нові поля, або використовуйте any тимчасово
       
-      const profile = await taskService.getUserProfile();
-      
-      // [DEBUG 3] Дивимось "сиру" відповідь від сервера
       console.log("📥 [4. GameContext] Raw Profile from API:", profile);
 
       if (profile) {
@@ -88,16 +98,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setGold(profile.gold);
         setXp(profile.xp);
         
-        // [DEBUG 4] Перевіряємо логіку мапінгу
-        const className = mapAvatarClassToString(profile.class);
-        console.log("⚙️ Class Mapping:", { raw: profile.class, mapped: className });
+        // --- 3. Заповнення характеристик з бекенду ---
+        // Використовуємо || 1 про всяк випадок, якщо поле прийде null
+        setStrength(profile.strength || 1);
+        setIntellect(profile.intellect || 1);
+        setDexterity(profile.dexterity || 1);
+        setWisdom(profile.wisdom || 1);
+        // ---------------------------------------------
 
+        const className = mapAvatarClassToString(profile.class);
         setUserClass(className);
       }
     } catch (e) {
       console.error("❌ [GameContext] Error loading profile:", e);
     }
-};
+  };
 
   const showFloatingText = (x: number, y: number, text: string, color: string) => {
     const id = Date.now().toString() + Math.random();
@@ -131,6 +146,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     <GameContext.Provider
       value={{ 
         hp, gold, xp, level, username, userClass,
+        // --- 4. Передача в провайдер ---
+        strength, intellect, dexterity, wisdom,
+        // -------------------------------
         controls, floatingTexts, 
         refreshProfile, takeDamage, addRewards,
         isCreateQuestOpen, setCreateQuestOpen 

@@ -105,6 +105,10 @@ export interface UserProfile {
     hp: number;
     level?: number;
     class?: AvatarClass;
+    strength: number;
+    intellect: number;
+    dexterity: number;
+    wisdom: number;
 }
 
 // 7. Відповідь при виконанні завдання (нові баланси)
