@@ -23,19 +23,44 @@ export enum TaskCategory {
     SelfCare = 12 
 }
 
+export enum AvatarClass {
+  Healer = 1,
+  Warrior = 2,
+  Crafter = 3,
+  Mage = 4
+}
+
+export interface AvatarDto {
+  id: string;
+  userId: string;
+  name?: string;
+  class: AvatarClass;
+  level: number;
+  xp: number;
+  hp: number;
+  maxHP: number;
+  gold: number;
+  
+  // Характеристики
+  strength: number;
+  intellect: number;
+  dexterity: number;
+  wisdom: number;
+}
+
 // 2. Основна сутність завдання
 export interface Task {
     id: string;
     title: string;
     description?: string;
     isCompleted: boolean;
-    type: string;          // "Daily", "Main"
+    type: string;       
     category?: TaskCategory; 
     
     xpReward: number;      
     goldReward: number;    
     
-    difficulty: string;    // "Easy", "Medium", "Hard", "Epic"
+    difficulty: string;   
     dueDate?: string;
     createdAt?: string;
 }
@@ -47,13 +72,19 @@ export interface CreateTaskRequest {
     type: string;
     category: TaskCategory;
     dueDate?: string;
+    xpReward?: number;      // Нагорода, яку порахував AI
+    goldReward?: number;    // Золото, яке порахував AI
+    difficulty?: string;    // Складність (Easy/Medium/Hard)
 }
 
 // 4. Відповідь від AI-аналізатора
 export interface TaskComplexityResponse {
-    difficulty: string;
-    xpReward: number;   
-    goldReward: number; 
+   difficulty: string;  // "Easy", "Medium", ...
+    category: string;    // "Sport", "Career", ... (Приходить як рядок!)
+    dueDate?: string;    // "2026-02-20T..."
+    
+    xpReward: number;
+    goldReward: number;
 }
 
 // 5. Запит на оновлення
@@ -66,8 +97,6 @@ export interface UpdateTaskRequest {
     dueDate?: string;
 }
 
-// --- НОВІ ТИПИ (Додайте це, щоб виправити помилки) ---
-
 // 6. Профіль користувача (для відображення зверху)
 export interface UserProfile {
     username: string; // <--- Додано
@@ -75,12 +104,15 @@ export interface UserProfile {
     xp: number;
     hp: number;
     level?: number;
+    class?: AvatarClass;
+    strength: number;
+    intellect: number;
+    dexterity: number;
+    wisdom: number;
 }
 
 // 7. Відповідь при виконанні завдання (нові баланси)
 export interface CompleteTaskResponse {
-    newGold: number;
-    newXp: number;
-    // Можна додати task, якщо бекенд повертає і саме завдання
-    // task?: Task; 
+    earnedGold: number;
+    earnedXp: number;
 }

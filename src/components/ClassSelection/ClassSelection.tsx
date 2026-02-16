@@ -26,7 +26,7 @@ const CLASS_DATA = [
         cssClass: 'hero-warrior'
     },
     {
-        id: 3,
+        id: 4,
         title: 'The Mage',
         description: 'A scholar of the arcane arts, wielding elemental forces.',
         imageSrc: '/images/avatar_mage.png',
@@ -35,7 +35,7 @@ const CLASS_DATA = [
         cssClass: 'hero-mage'
     },
     {
-        id: 4,
+        id: 3,
         title: 'The Crafter',
         description: 'An artisan of unparalleled skill.',
         imageSrc: '/images/avatar_crafter.png',
@@ -57,21 +57,28 @@ const ClassSelectionPage = () => {
         setIsModalOpen(false);
     };
 
-    const handleEmbraceJourney = async () => {
+        const handleEmbraceJourney = async () => {
         if (!selectedClass) return;
         setIsLoading(true);
 
         try {
-            // 1. Відправляємо запит на бекенд для створення аватара/вибору класу
+            // [DEBUG 1] Перевіряємо, що обрав користувач
+            console.log("🔍 [1. ClassSelection] User selected:", {
+                id: selectedClass.id,
+                title: selectedClass.title
+            });
+
+            // 1. Відправляємо запит
             await authService.selectClass(selectedClass.id, selectedClass.title);
             
-            console.log(`User selected class: ${selectedClass.title}`);
+            // [DEBUG 2] Якщо дійшли сюди - запит пройшов успішно
+            console.log("✅ [2. ClassSelection] API call successful via authService");
             
-            // 2. Успіх -> Переходимо на Дашборд
             router.push('/dashboard');
             
         } catch (error) {
-            console.error("Failed to select class:", error);
+            // [DEBUG ERROR]
+            console.error("❌ [ClassSelection] Error selecting class:", error);
             alert("Something went wrong with creating your hero. Try again.");
         } finally {
             setIsLoading(false);
