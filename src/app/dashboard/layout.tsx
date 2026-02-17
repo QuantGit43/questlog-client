@@ -127,7 +127,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
       {/* --- FOOTER --- */}
       <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-6 z-40">
-        <button onClick={() => router.push('/dashboard/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
+        <button onClick={() => router.push('/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
           <img src="/images/Group shop.png" alt="Shop" className="h-20 w-auto object-contain" />
         </button>
         
