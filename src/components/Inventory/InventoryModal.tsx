@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import './InventoryModal.css';
 
-// --- ТИПЫ ---
-// 🔄 Заменили 'gear' на 'eyes'
 type ItemType = 'hair' | 'top' | 'bottom' | 'eyes';
 type Gender = 'male' | 'female';
 
