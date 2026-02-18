@@ -3,10 +3,7 @@
 import React, { useState } from 'react';
 import './InventoryModal.css';
 
-<<<<<<< HEAD
-=======
 // --- ТИПИ ---
->>>>>>> 1595fd03ae2428da52c4274d0efec87289ba995c
 type ItemType = 'hair' | 'top' | 'bottom' | 'eyes';
 type Gender = 'male' | 'female';
 
