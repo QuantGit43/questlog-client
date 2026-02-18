@@ -1,5 +1,3 @@
-/* src/components/Shop/ShopList.module.css */
-
 /* Головний контейнер */
 .container {
   position: relative;
@@ -23,28 +21,34 @@
   background-repeat: no-repeat;
 }
 
-/* Кнопка назад */
-.backButton {
+/* --- КНОПКА НАЗАД (Стиль як в Inventory) --- */
+.backArrowBtn {
   position: absolute;
-  top: -2rem;
-  left: 0rem;
+  top: 1rem;
+  left: 2rem; /* Трохи відступу зліва */
   z-index: 100;
-  cursor: pointer;
-  transition: transform 0.2s;
+  
   background: none;
   border: none;
+  cursor: pointer;
+  
+  color: white;
+  font-size: 3.5rem; /* Великий розмір стрілки */
+  font-weight: bold;
+  line-height: 1;
+  
+  /* Тінь для видимості */
+  text-shadow: 2px 2px 0 #000;
+  
+  transition: transform 0.2s;
 }
 
-/* Віддзеркалюємо стрілку та додаємо ефект при наведенні */
-.backIcon {
-  width: 15rem; /* Трохи збільшив для кращого вигляду */
-  height: 15rem;
-  transform: scaleX(-1); 
-}
-
-.backButton:hover {
-  /* Комбінуємо віддзеркалення та збільшення при наведенні */
+.backArrowBtn:hover {
   transform: scale(1.1);
+}
+
+.backArrowBtn:active {
+  transform: scale(0.95);
 }
 
 /* --- Обгортка магазину --- */
@@ -57,11 +61,7 @@
   justify-content: center;
   width: 100%;
   max-height: 95vh;
-  
-  /* 👇 1. БОРДА ЩЕ ВИЩЕ */
-  /* Було -15vh, ставимо -22vh (сильно вгору) */
   margin-top: -60vh; 
-  
   transform: scale(0.9);
 }
 
@@ -75,14 +75,8 @@
 .lanterns {
   position: relative;
   z-index: 30;
-  
-  /* 👇 2. ЛІХТАРІ НАБАГАТО НИЖЧЕ */
-  /* Було 10vh, ставимо 35vh (величезний відступ зверху) */
   padding-top: 35vh; 
-  
-  /* Підтягуємо нижні елементи, щоб не було дірки */
   margin-bottom: -399px; 
-  
   width: 350px;
   pointer-events: none;
 }
@@ -101,54 +95,41 @@
 .sign {
   position: relative;
   z-index: 20;
-  
-  /* Відступ знизу: наскільки вивіска "наїжджає" на дошку */
   margin-top: -95px; 
   margin-left: -190px;
-  /* Відступ зверху: якщо треба відсунути від ліхтарів - регулюй тут margin-top */
-  /* margin-top: 10px; */ 
-
   width: 320px;
   height: 110px;
-  
   display: flex;
   align-items: center;
   justify-content: center;
-  
   background-image: url('/images/shop/sign.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-
-  /* ВАЖЛИВО: Цей відступ опускає текст, щоб він був на дереві, а не на ланцюгах */
   padding-top: -900px; 
   pointer-events: none;
 }
 
 .signText {
-  color: #fff8dc; /* Кремовий колір (Cornsilk), краще ніж чисто білий */
+  color: #fff8dc;
   font-size: 2.2rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.15em; /* Розрядка літер */
-  
-  /* Жорстка тінь для ефекту піксель-арту */
-  text-shadow: 
-    3px 3px 0 #3e2723,
-    -1px -1px 0 rgba(0,0,0,0.2);
+  letter-spacing: 0.15em;
+  text-shadow: 3px 3px 0 #3e2723, -1px -1px 0 rgba(0,0,0,0.2);
 }
 
 @media (min-width: 768px) {
   .sign {
-    width: 4500px; /* Зробив ширшою для ПК */
+    width: 4500px; 
     height: 350px;
-    margin-bottom: -570px; /* Сильніше накладання на великому екрані */
-    padding-top: 700px; /* Коригування тексту для великої картинки */
+    margin-bottom: -570px; 
+    padding-top: 700px; 
   }
   .signText {
     margin-bottom: 950px;
     margin-right: -210px;
-    font-size: 3rem; /* Великий текст */
+    font-size: 3rem; 
     text-shadow: 5px 5px 0 #3e2723;
   }
 }
@@ -158,7 +139,6 @@
   position: relative;
   z-index: 10;
   margin-bottom: -70px;
-  /* 👇 ЗБІЛЬШЕННЯ БОРДИ: зробив ширшою та вищою */
   width: 98vw;
   max-width: 1200px; 
   aspect-ratio: 16 / 10;
@@ -173,7 +153,6 @@
   align-items: center;
   justify-content: center;
   
-  /* Відступи залишаємо ті ж, щоб сітка була по центру */
   padding-top: 8%;
   padding-bottom: 2%;
   padding-left: 14%;
@@ -234,7 +213,6 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +245,7 @@
 .priceTag {
   display: flex;
   align-items: center;
-  gap: 6px; /* Трохи збільшив відступ для картинки */
+  gap: 6px; 
   font-size: 0.9rem;
   font-weight: bold;
   color: white;
@@ -280,10 +258,9 @@
 }
 
 .coinIcon {
-  width: 18px;  /* Налаштуй під свій експорт */
+  width: 18px; 
   height: 18px;
   object-fit: contain;
-  /* Якщо монетка — це піксель-арт, додаємо цей рядок, щоб вона була чіткою: */
   image-rendering: pixelated; 
 }
 
@@ -294,7 +271,6 @@
   font-size: 0.8rem;
   text-transform: uppercase;
   font-weight: bold;
-  
   padding: 5px 14px;
   border-radius: 6px;
   border: none;
@@ -342,4 +318,45 @@
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+/* ========================================= */
+/* --- COMING SOON (Простий напис) --- */
+/* ========================================= */
+
+.comingSoonOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Жодних фонів чи блюру, просто центруємо */
+}
+
+.comingSoonTitle {
+  font-family: inherit;
+  font-size: 4rem; /* Дуже великий текст */
+  color: #3e2723; /* Темно-коричневий колір (під дерево) */
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 4px;
+  text-align: center;
+  
+  /* Світла обводка (text-shadow) щоб читалось на будь-якому фоні */
+  text-shadow: 
+    2px 2px 0px #eecfa1, 
+    -2px -2px 0px #eecfa1,
+    2px -2px 0px #eecfa1,
+    -2px 2px 0px #eecfa1;
+}
+
+@media (max-width: 768px) {
+  .comingSoonTitle {
+      font-size: 2.5rem;
+  }
 }
