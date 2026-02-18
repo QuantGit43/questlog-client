@@ -29,7 +29,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Логіка для повноекранних сторінок
   const isFullScreenPage = pathname === '/dashboard/inventory' || pathname === '/dashboard/shop';
   if (isFullScreenPage) {
      return <>{children}</>;
@@ -55,7 +54,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
       <FloatingTextLayer items={floatingTexts} />
 
-      {/* HEADER: Ховаємо, якщо відкрито створення квесту */}
       {!isCreateQuestOpen && (
         <header className="w-full p-4 flex justify-between items-start z-30 pointer-events-none absolute top-0 left-0">
             <div className="pointer-events-auto">
@@ -101,14 +99,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           />
       )}
 
-      {/* MAIN CONTENT */}
       <main className={`relative w-full h-full flex flex-col items-center justify-center pt-20 pb-32 px-4 pointer-events-none transition-all ${isCreateQuestOpen ? 'z-50' : 'z-10'}`}>
         <div className="pointer-events-auto w-full h-full flex items-center justify-center">
             {children}
         </div>
       </main>
 
-      {/* FOOTER: Ховаємо, якщо відкрито створення квесту */}
       {!isCreateQuestOpen && (
         <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-6 z-40 pointer-events-auto">
             <button onClick={() => router.push('/dashboard/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">

@@ -19,7 +19,6 @@ export default function DashboardPage() {
     } = useGame();
 
     const [tasks, setTasks] = useState<Task[]>([]);
-    // ЛОКАЛЬНИЙ СТЕЙТ (повернуто):
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     useEffect(() => {
@@ -50,7 +49,7 @@ export default function DashboardPage() {
 
     const handleTaskDelete = (taskId: string) => {
         takeDamage(20);
-        setTasks(prev => prev.filter(t => t.id !== taskId));
+      setTasks(prev => prev.filter(t => t.id !== taskId));
         setSelectedTask(null);
     };
 
@@ -60,7 +59,7 @@ export default function DashboardPage() {
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
-
+        
             <div 
                 className="relative z-10 w-full max-w-4xl aspect-[16/10] bg-no-repeat bg-contain bg-center flex items-center justify-center pt-10 pb-10 pl-8 pr-8"
                 style={{ backgroundImage: "url('/images/board.png')" }}
@@ -78,7 +77,10 @@ export default function DashboardPage() {
                                 className="col-span-full text-center py-10 flex flex-col items-center justify-center h-full"
                             >
                                 <p className="text-xl text-[#5d4037] font-bold drop-shadow-sm">Quest Log Empty</p>
-                                <button onClick={() => setCreateQuestOpen(true)} className="text-[#5d4037] underline text-sm mt-2 font-semibold hover:text-[#3e2723]">
+                                <button 
+                                    onClick={() => setCreateQuestOpen(true)} 
+                                    className="text-[#5d4037] underline text-sm mt-2 font-semibold hover:text-[#3e2723]"
+                                >
                                     Create a quest
                                 </button>
                             </motion.div>
@@ -87,7 +89,6 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Модалка Створення (Ховає хедер/футер через глобальний стейт isCreateQuestOpen) */}
             {isCreateQuestOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
                     <div onClick={(e) => e.stopPropagation()}>
@@ -96,7 +97,6 @@ export default function DashboardPage() {
                 </div>
             )}
             
-            {/* Модалка Деталей (НЕ ховає хедер/футер, але затемнює фон) */}
             {selectedTask && (
                  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
                     <div onClick={(e) => e.stopPropagation()}>

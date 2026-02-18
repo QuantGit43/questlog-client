@@ -1,0 +1,345 @@
+/* src/components/Shop/ShopList.module.css */
+
+/* Головний контейнер */
+.container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace; 
+}
+
+/* ФОН */
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/images/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Кнопка назад */
+.backButton {
+  position: absolute;
+  top: -2rem;
+  left: 0rem;
+  z-index: 100;
+  cursor: pointer;
+  transition: transform 0.2s;
+  background: none;
+  border: none;
+}
+
+/* Віддзеркалюємо стрілку та додаємо ефект при наведенні */
+.backIcon {
+  width: 15rem; /* Трохи збільшив для кращого вигляду */
+  height: 15rem;
+  transform: scaleX(-1); 
+}
+
+.backButton:hover {
+  /* Комбінуємо віддзеркалення та збільшення при наведенні */
+  transform: scale(1.1);
+}
+
+/* --- Обгортка магазину --- */
+.shopWrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-height: 95vh;
+  
+  /* 👇 1. БОРДА ЩЕ ВИЩЕ */
+  /* Було -15vh, ставимо -22vh (сильно вгору) */
+  margin-top: -60vh; 
+  
+  transform: scale(0.9);
+}
+
+@media (min-width: 768px) {
+  .shopWrapper {
+    transform: scale(1);
+  }
+}
+
+/* --- 1. Ліхтарі --- */
+.lanterns {
+  position: relative;
+  z-index: 30;
+  
+  /* 👇 2. ЛІХТАРІ НАБАГАТО НИЖЧЕ */
+  /* Було 10vh, ставимо 35vh (величезний відступ зверху) */
+  padding-top: 35vh; 
+  
+  /* Підтягуємо нижні елементи, щоб не було дірки */
+  margin-bottom: -399px; 
+  
+  width: 350px;
+  pointer-events: none;
+}
+
+.lanterns img {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .lanterns {
+    width: 500px;
+  }
+}
+
+/* --- 2. Вивіска --- */
+.sign {
+  position: relative;
+  z-index: 20;
+  
+  /* Відступ знизу: наскільки вивіска "наїжджає" на дошку */
+  margin-top: -95px; 
+  margin-left: -190px;
+  /* Відступ зверху: якщо треба відсунути від ліхтарів - регулюй тут margin-top */
+  /* margin-top: 10px; */ 
+
+  width: 320px;
+  height: 110px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  background-image: url('/images/shop/sign.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* ВАЖЛИВО: Цей відступ опускає текст, щоб він був на дереві, а не на ланцюгах */
+  padding-top: -900px; 
+  pointer-events: none;
+}
+
+.signText {
+  color: #fff8dc; /* Кремовий колір (Cornsilk), краще ніж чисто білий */
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.15em; /* Розрядка літер */
+  
+  /* Жорстка тінь для ефекту піксель-арту */
+  text-shadow: 
+    3px 3px 0 #3e2723,
+    -1px -1px 0 rgba(0,0,0,0.2);
+}
+
+@media (min-width: 768px) {
+  .sign {
+    width: 4500px; /* Зробив ширшою для ПК */
+    height: 350px;
+    margin-bottom: -570px; /* Сильніше накладання на великому екрані */
+    padding-top: 700px; /* Коригування тексту для великої картинки */
+  }
+  .signText {
+    margin-bottom: 950px;
+    margin-right: -210px;
+    font-size: 3rem; /* Великий текст */
+    text-shadow: 5px 5px 0 #3e2723;
+  }
+}
+
+/* --- 3. Дошка --- */
+.board {
+  position: relative;
+  z-index: 10;
+  margin-bottom: -70px;
+  /* 👇 ЗБІЛЬШЕННЯ БОРДИ: зробив ширшою та вищою */
+  width: 98vw;
+  max-width: 1200px; 
+  aspect-ratio: 16 / 10;
+  max-height: 85vh;
+  
+  background-image: url('/images/shop/board.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Відступи залишаємо ті ж, щоб сітка була по центру */
+  padding-top: 8%;
+  padding-bottom: 2%;
+  padding-left: 14%;
+  padding-right: 14%;
+}
+
+@media (min-width: 768px) {
+  .board {
+    padding-left: 16%;
+    padding-right: 16%;
+  }
+}
+
+/* --- Сітка --- */
+.grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  align-content: center;
+  justify-items: center;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    gap: 2rem;
+  }
+}
+
+/* --- Картка --- */
+.itemCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 140px;
+  transition: transform 0.2s;
+  z-index: 40;
+}
+
+.itemCard:hover {
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .itemCard {
+    max-width: 180px;
+  }
+}
+
+/* Слот */
+.slot {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-image: url('/images/shop/slot.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemImage {
+  width: 65%;
+  height: 65%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4));
+}
+
+/* Інфо */
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -1.5rem;
+  z-index: 20;
+  width: 100%;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .itemInfo {
+    margin-top: -2rem;
+  }
+}
+
+.priceTag {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Трохи збільшив відступ для картинки */
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 4px 10px;
+  border-radius: 99px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.coinIcon {
+  width: 18px;  /* Налаштуй під свій експорт */
+  height: 18px;
+  object-fit: contain;
+  /* Якщо монетка — це піксель-арт, додаємо цей рядок, щоб вона була чіткою: */
+  image-rendering: pixelated; 
+}
+
+/* Кнопка */
+.buyButton {
+  background-color: #6d4c41;
+  color: #fff8dc;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: none;
+  border-bottom: 4px solid #3e2723;
+  z-index: 60;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+  transition: all 0.1s;
+}
+
+.buyButton:active {
+  border-bottom: 0;
+  transform: translateY(4px);
+}
+
+.buyButton:hover {
+  background-color: #8d6e63;
+}
+
+/* Пустий слот */
+.emptySlot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.3;
+  filter: grayscale(100%);
+  pointer-events: none;
+  width: 100%;
+  max-width: 140px;
+}
+@media (min-width: 768px) {
+  .emptySlot {
+    max-width: 180px;
+  }
+}
+
+.loadingText {
+  grid-column: 1 / -1;
+  color: #5d4037;
+  font-size: 1.5rem;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
