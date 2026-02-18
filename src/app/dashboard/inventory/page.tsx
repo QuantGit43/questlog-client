@@ -4,13 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { inventoryService } from '@/services/inventoryService';
 import { BackendInventoryItem, GameItemAsset, LayerType, Gender, EquipmentSlot } from '@/types/inventory';
-// Стилі (переконайтеся, що файл існує)
+// Переконайтеся, що шлях до CSS правильний!
 import "@/components/Inventory/InventoryModal.css"; 
 
-// --- ЛОКАЛЬНА БАЗА АСЕТІВ (Картинки) ---
-// ВАЖЛИВО: поле `id` тут має точно співпадати зі значеннями MaleAssetId/FemaleAssetId в базі даних .NET
+// --- ВАШІ АСЕТИ ---
 const INVENTORY_ASSETS: GameItemAsset[] = [
-    // --- ЧОЛОВІЧІ ---
+    // ЧОЛОВІЧІ
     { id: 'm_h1', type: 'hair', gender: 'male', iconSrc: '/images/male_hair_1.png', layerSrc: '/images/male_hair_1.png' },
     { id: 'm_h2', type: 'hair', gender: 'male', iconSrc: '/images/male_hair_2.png', layerSrc: '/images/male_hair_2.png' },
     { id: 'm_e1', type: 'eyes', gender: 'male', iconSrc: '/images/male_eyes_1.png', layerSrc: '/images/male_eyes_1.png' },
@@ -20,7 +19,7 @@ const INVENTORY_ASSETS: GameItemAsset[] = [
     { id: 'm_b1', type: 'bottom', gender: 'male', iconSrc: '/images/male_bottom_1.png', layerSrc: '/images/male_bottom_1.png' },
     { id: 'm_b2', type: 'bottom', gender: 'male', iconSrc: '/images/male_bottom_2.png', layerSrc: '/images/male_bottom_2.png' },
 
-    // --- ЖІНОЧІ ---
+    // ЖІНОЧІ
     { id: 'f_h1', type: 'hair', gender: 'female', iconSrc: '/images/female_hair_1.png', layerSrc: '/images/female_hair_1.png' },
     { id: 'f_h2', type: 'hair', gender: 'female', iconSrc: '/images/female_hair_2.png', layerSrc: '/images/female_hair_2.png' },
     { id: 'f_e1', type: 'eyes', gender: 'female', iconSrc: '/images/female_eyes_1.png', layerSrc: '/images/female_eyes_1.png' },
@@ -39,17 +38,15 @@ export default function InventoryPage() {
     const [gender, setGender] = useState<Gender>('male');
     const [isLoading, setIsLoading] = useState(true);
 
-    // Data State
+    // Data State (Реально куплені речі)
     const [userItems, setUserItems] = useState<BackendInventoryItem[]>([]);
     
-    // Візуальний стан (що зараз одягнуто на манекені)
+    // Візуальний стан (Що бачимо на манекені)
     const [equippedCode, setEquippedCode] = useState<{ [key in LayerType]: string | null }>({
         hair: null, eyes: null, top: null, bottom: null
     });
 
     // --- ХЕЛПЕРИ ---
-
-    // Мапінг C# Enum (0,1,2,3) -> Фронтенд типи ('hair', 'eyes'...)
     const mapSlotToType = (slot: EquipmentSlot): LayerType | null => {
         switch (slot) {
             case EquipmentSlot.Head: return 'hair';
@@ -60,7 +57,6 @@ export default function InventoryPage() {
         }
     };
 
-    // Отримати ID картинки залежно від статі (MaleAssetId або FemaleAssetId)
     const getAssetIdForGender = (item: BackendInventoryItem, currentGender: Gender): string | undefined => {
         return currentGender === 'male' ? item.item.maleAssetId : item.item.femaleAssetId;
     };
@@ -68,25 +64,23 @@ export default function InventoryPage() {
     // --- ЗАВАНТАЖЕННЯ ---
     useEffect(() => {
         loadInventory();
-        // При зміні статі треба перерахувати візуал, бо MaleAssetId != FemaleAssetId
     }, [gender]); 
 
     const loadInventory = async () => {
         try {
             const data = await inventoryService.getAll();
-            setUserItems(data);
+            // Перевіряємо, чи прийшов масив (фікс помилки .forEach)
+            const safeData = Array.isArray(data) ? data : []; 
+            setUserItems(safeData);
 
-            // Визначаємо, що одягнуто
             const newEquipped = { ...equippedCode };
             
-            data.forEach(invRecord => {
+            safeData.forEach(invRecord => {
                 if (invRecord.isEquipped) {
                     const type = mapSlotToType(invRecord.item.slot);
                     if (type) {
                         const assetId = getAssetIdForGender(invRecord, gender);
-                        if (assetId) {
-                            newEquipped[type] = assetId;
-                        }
+                        if (assetId) newEquipped[type] = assetId;
                     }
                 }
             });
@@ -102,56 +96,44 @@ export default function InventoryPage() {
 
     // --- ЛОГІКА ЕКІПІРУВАННЯ ---
     const handleEquip = async (asset: GameItemAsset) => {
-        // Шукаємо в інвентарі предмет, який має цей AssetId
-        const backendItem = userItems.find(u => getAssetIdForGender(u, gender) === asset.id);
-        
-        if (!backendItem) {
-            console.warn("Item not found in inventory (sync error):", asset.id);
-            return;
-        }
-
-        // Оптимістичне оновлення UI
-        const prevEquipped = { ...equippedCode };
         const isCurrentlyEquipped = equippedCode[asset.type] === asset.id;
 
+        // 1. Миттєво оновлюємо візуал (UI)
         setEquippedCode(prev => ({
             ...prev,
             [asset.type]: isCurrentlyEquipped ? null : asset.id
         }));
 
-        try {
-            // Відправляємо запит на сервер
-            await inventoryService.equip(backendItem.id);
-            
-            // Оновлюємо локальний список (прапорці isEquipped)
-            setUserItems(prev => prev.map(item => {
-                // Якщо це інша річ того ж типу (наприклад, інша шапка) -> знімаємо
-                if (item.item.slot === backendItem.item.slot && item.id !== backendItem.id) {
-                    return { ...item, isEquipped: false };
-                }
-                // Якщо це наша річ -> перемикаємо
-                if (item.id === backendItem.id) {
-                    return { ...item, isEquipped: !isCurrentlyEquipped };
-                }
-                return item;
-            }));
-
-        } catch (error) {
-            console.error("Equip failed:", error);
-            setEquippedCode(prevEquipped); // Відкат при помилці
-            alert("Failed to equip item.");
+        // 2. Пробуємо зберегти на сервер (якщо річ куплена)
+        const backendItem = userItems.find(u => getAssetIdForGender(u, gender) === asset.id);
+        
+        if (backendItem) {
+            try {
+                await inventoryService.equip(backendItem.id);
+                // Оновлюємо локальний стейт
+                setUserItems(prev => prev.map(item => {
+                    if (item.item.slot === backendItem.item.slot && item.id !== backendItem.id) {
+                        return { ...item, isEquipped: false };
+                    }
+                    if (item.id === backendItem.id) {
+                        return { ...item, isEquipped: !isCurrentlyEquipped };
+                    }
+                    return item;
+                }));
+            } catch (error) {
+                console.error("Failed to save equip:", error);
+            }
+        } else {
+            console.log("Visual equip only (item not owned in DB)");
         }
     };
 
-    // Фільтруємо асети для відображення:
-    // 1. Тільки поточний таб і стать.
-    // 2. Тільки ті, що Є в `userItems` (куплені).
+    // --- ФІЛЬТРАЦІЯ (ПОКАЗУЄМО ВСЕ!) ---
+    // Ми прибрали фільтр "userItems.some", щоб ви бачили всі доступні картинки
     const displayItems = INVENTORY_ASSETS.filter(asset => {
-        if (asset.gender !== gender || asset.type !== activeTab) return false;
-        return userItems.some(u => getAssetIdForGender(u, gender) === asset.id);
+        return asset.gender === gender && asset.type === activeTab;
     });
 
-    // Отримати шлях до картинки шару
     const getLayerSrc = (type: LayerType) => {
         const code = equippedCode[type];
         return code ? INVENTORY_ASSETS.find(a => a.id === code)?.layerSrc : null;
@@ -202,6 +184,9 @@ export default function InventoryPage() {
                             {displayItems.length > 0 ? (
                                 displayItems.map(asset => {
                                     const isEquipped = equippedCode[asset.type] === asset.id;
+                                    // Перевірка власності (для краси)
+                                    const isOwned = userItems.some(u => getAssetIdForGender(u, gender) === asset.id);
+
                                     return (
                                         <div 
                                             key={asset.id} 
@@ -209,12 +194,16 @@ export default function InventoryPage() {
                                             onClick={() => handleEquip(asset)}
                                         >
                                             <img src={asset.iconSrc} alt="item" />
+                                            {/* Маркер, якщо річ не куплена, але ми її показуємо */}
+                                            {!isOwned && (
+                                                <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" title="Not owned" />
+                                            )}
                                         </div>
                                     );
                                 })
                             ) : (
                                 <div className="col-span-full text-center text-[#5d4037] font-pixel text-xs pt-10 opacity-70">
-                                    Empty. Visit the Shop to buy items!
+                                    No items in this category.
                                 </div>
                             )}
                             
