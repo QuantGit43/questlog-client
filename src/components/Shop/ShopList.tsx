@@ -4,19 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { shopService } from '@/services/shopService';
 import { ShopItem } from '@/types/shop';
 import { useRouter } from 'next/navigation';
-// Імпорт стилів
 import styles from './ShopList.module.css';
 
+// Прапорець: true = показуємо напис "Coming Soon", false = показуємо товари
+const IS_COMING_SOON = true; 
+
 export const ShopList = () => {
-    // Тестові дані (показуються, якщо сервер пустий або помилка)
+    // Тестові дані
     const DUMMY_ITEMS: ShopItem[] = Array.from({ length: 8 }).map((_, i) => ({
-        id: `dummy-${i}`,
-        name: "Test Item",
-        price: 50,
-        slot: "Hand",
-        assetId: "null",
-        class: "Any",
-        isRecommended: false
+        id: `dummy-${i}`, name: "Test Item", price: 50, slot: "Hand", assetId: "null", class: "Any", isRecommended: false
     }));
 
     const [items, setItems] = useState<ShopItem[]>([]);
@@ -43,6 +39,8 @@ export const ShopList = () => {
     }, []);
 
     const handleBuy = async (item: ShopItem) => {
+        if (IS_COMING_SOON) return; 
+
         if (item.id.startsWith('dummy')) {
             alert("This is a demo item!");
             return;
@@ -62,41 +60,44 @@ export const ShopList = () => {
 
     return (
         <div className={styles.container}>
-            
-            {/* Єдиний фон */}
+            {/* Фон */}
             <div className={styles.background} />
 
-            {/* Кнопка назад */}
-            <button onClick={() => router.back()} className={styles.backButton}>
-                 <img src="/images/shop/arrow.png" alt="Back" className={styles.backIcon} />
+            {/* Кнопка "Назад" (як в Інвентарі) */}
+            <button className={styles.backArrowBtn} onClick={() => router.back()}>
+                ↩
             </button>
 
-            {/* Обгортка магазину */}
             <div className={styles.shopWrapper}>
 
-                {/* 1. Ліхтарі */}
+                {/* Ліхтарі */}
                 <div className={styles.lanterns}> 
                     <img src="/images/shop/lanterns.png" alt="Lanterns" />
                 </div>
 
-                {/* 2. Вивіска */}
+                {/* Вивіска */}
                 <div className={styles.sign}>
                     <span className={styles.signText}>Shop</span>
                 </div>
 
-                {/* 3. Дошка */}
+                {/* Дошка */}
                 <div className={styles.board}>
                     
-                    {/* Сітка товарів */}
-                    <div className={styles.grid}>
+                    {/* --- COMING SOON НАПИС --- */}
+                    {IS_COMING_SOON && (
+                        <div className={styles.comingSoonOverlay}>
+                            <h2 className={styles.comingSoonTitle}>COMING SOON</h2>
+                        </div>
+                    )}
+
+                    {/* Сітка товарів (прихована або під низом, якщо Coming Soon) */}
+                    <div className={styles.grid} style={{ opacity: IS_COMING_SOON ? 0.1 : 1 }}>
                         
                         {loading ? (
                              <div className={styles.loadingText}>Loading...</div>
                         ) : (
                             items.map((item, index) => (
                                 <div key={item.id || index} className={styles.itemCard}>
-                                    
-                                    {/* Слот */}
                                     <div className={styles.slot}>
                                         {getImageUrl(item.assetId) && (
                                             <img 
@@ -107,13 +108,16 @@ export const ShopList = () => {
                                         )}
                                     </div>
 
-                                    {/* Інфо + Кнопка */}
                                     <div className={styles.itemInfo}>
                                         <div className={styles.priceTag}>
-                                        <img src="/images/shop/coin.png" alt="coin" className={styles.coinIcon} />             
-                                       <span>{item.price}</span>
+                                            <img src="/images/shop/coin.png" alt="coin" className={styles.coinIcon} />            
+                                           <span>{item.price}</span>
                                         </div>
-                                        <button onClick={() => handleBuy(item)} className={styles.buyButton}>
+                                        <button 
+                                            onClick={() => handleBuy(item)} 
+                                            className={styles.buyButton}
+                                            disabled={IS_COMING_SOON}
+                                        >
                                             Buy
                                         </button>
                                     </div>
@@ -121,7 +125,6 @@ export const ShopList = () => {
                             ))
                         )}
 
-                        {/* Додаємо пусті слоти для краси, якщо товарів < 8 */}
                         {!loading && items.length < 8 && Array.from({ length: 8 - items.length }).map((_, i) => (
                              <div key={`empty-${i}`} className={styles.emptySlot}>
                                 <div className={styles.slot} />
