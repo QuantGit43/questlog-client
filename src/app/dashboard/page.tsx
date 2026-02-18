@@ -11,7 +11,6 @@ import { CreateModal } from "./components/CreateModal";
 import { DetailsModal } from "./components/DetailsModal";
 
 export default function DashboardPage() {
-    /* Використовуємо контекст замість локальних стейтів hp/gold/xp */
     const { 
         addRewards, 
         takeDamage, 
@@ -22,7 +21,6 @@ export default function DashboardPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-    /* Завантаження завдань */
     useEffect(() => {
         loadTasks();
     }, []);
@@ -31,7 +29,6 @@ export default function DashboardPage() {
         try {
             const data = await taskService.getAll();
             if(Array.isArray(data)) {
-                // Фільтруємо виконані, якщо потрібно
                 setTasks(data.filter((t: any) => !t.isCompleted));
             }
         } catch(e) { 
@@ -39,42 +36,34 @@ export default function DashboardPage() {
         }
     };
 
-    /* Обробники подій передаються в компоненти */
     const handleTaskCreated = (newTask: Task) => {
         setTasks(prev => [...prev, newTask]);
         setCreateQuestOpen(false);
     };
 
     const handleTaskComplete = (task: Task) => {
-        // Анімація нагород (вилітає з центру екрану)
         addRewards(task.goldReward, task.xpReward, window.innerWidth / 2, window.innerHeight / 2);
         setTasks(prev => prev.filter(t => t.id !== task.id));
         setSelectedTask(null);
     };
 
     const handleTaskDelete = (taskId: string) => {
-        takeDamage(20); // Покарання за видалення
-        setTasks(prev => prev.filter(t => t.id !== taskId));
+        takeDamage(20);
+      setTasks(prev => prev.filter(t => t.id !== taskId));
         setSelectedTask(null);
     };
 
     return (
         <>
-            {/* Глобальні стилі для скролу */}
             <style jsx global>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
-
-            {/* Основна область "Дошка".
-               Ми не додаємо тут Header/Footer, бо вони вже є в layout.tsx.
-               Використовуємо стару верстку з aspect-[16/10].
-            */}
+        
             <div 
                 className="relative z-10 w-full max-w-4xl aspect-[16/10] bg-no-repeat bg-contain bg-center flex items-center justify-center pt-10 pb-10 pl-8 pr-8"
                 style={{ backgroundImage: "url('/images/board.png')" }}
             >
-                {/* Сітка завдань */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full h-[80%] overflow-y-auto py-4 pl-12 pr-4 scrollbar-hide content-start">
                     <AnimatePresence mode="popLayout">
                         {tasks.length > 0 ? (
@@ -100,20 +89,26 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Модальні вікна */}
             {isCreateQuestOpen && (
-                <CreateModal onClose={() => setCreateQuestOpen(false)} onCreated={handleTaskCreated} />
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <CreateModal onClose={() => setCreateQuestOpen(false)} onCreated={handleTaskCreated} />
+                    </div>
+                </div>
             )}
             
             {selectedTask && (
-                <DetailsModal 
-                    task={selectedTask} 
-                    onClose={() => setSelectedTask(null)} 
-                    onComplete={handleTaskComplete}
-                    onDelete={handleTaskDelete}
-                />
+                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <DetailsModal 
+                            task={selectedTask} 
+                            onClose={() => setSelectedTask(null)} 
+                            onComplete={handleTaskComplete}
+                            onDelete={handleTaskDelete}
+                        />
+                    </div>
+                </div>
             )}
-            
         </>
     );
 }
