@@ -89,8 +89,9 @@ export const useDashboardGame = () => {
       setHp(100);
       setGold(Math.floor(gold / 2));
     }
-  };
+  }; 
 
+  
   return {
     // State
     username, hp, gold, xp, level, xpProgress, tasks, floatingTexts, controls,

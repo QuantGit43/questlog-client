@@ -3,12 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
-import './ClassSelection.css'; // Твій CSS файл
+import './ClassSelection.css';
 
-// ДАНІ КЛАСІВ
 const CLASS_DATA = [
     {
-        id: 1, // Переконайся, що ці ID збігаються з ID в базі даних (якщо вони там є)
+        id: 1,
         title: 'The Healer',
         description: 'A guardian of life who mends wounds and cures ailments.',
         imageSrc: '/images/avatar_healer.png',
@@ -62,23 +61,11 @@ const ClassSelectionPage = () => {
         setIsLoading(true);
 
         try {
-            // [DEBUG 1] Перевіряємо, що обрав користувач
-            console.log("🔍 [1. ClassSelection] User selected:", {
-                id: selectedClass.id,
-                title: selectedClass.title
-            });
-
-            // 1. Відправляємо запит
-            await authService.selectClass(selectedClass.id, selectedClass.title);
-            
-            // [DEBUG 2] Якщо дійшли сюди - запит пройшов успішно
-            console.log("✅ [2. ClassSelection] API call successful via authService");
-            
+            await authService.selectClass(selectedClass.id, selectedClass.title);      
             router.push('/dashboard');
             
         } catch (error) {
-            // [DEBUG ERROR]
-            console.error("❌ [ClassSelection] Error selecting class:", error);
+            console.error(" [ClassSelection] Error selecting class:", error);
             alert("Something went wrong with creating your hero. Try again.");
         } finally {
             setIsLoading(false);
@@ -87,20 +74,11 @@ const ClassSelectionPage = () => {
 
     return (
         <div className="class-selection-wrapper">
-
-            {/* --- СЛОЙ ДЕКОРАЦИЙ --- */}
             <div className="scene-container">
-                {/* ОСТРОВ СТРОИТЕЛЯ (prop-island.png) */}
                 <img src="/images/prop-island.png" alt="Builder Island" className="scene-prop prop-builder-island" />
-
-                {/* ОСТРОВ ЦЕЛИТЕЛЯ (healer_island.png) */}
                 <img src="/images/healer_island.png" alt="Healer Island" className="scene-prop prop-healer-island" />
-
-                {/* ДРАКОН ВОИНА (dragon.png) */}
                 <img src="/images/dragon.png" alt="Dragon" className="scene-prop prop-dragon" />
             </div>
-
-            {/* --- СЛОЙ ГЕРОЕВ --- */}
             <div className="hero-overlay-container">
                 {CLASS_DATA.map((item) => (
                     <img
@@ -112,8 +90,6 @@ const ClassSelectionPage = () => {
                     />
                 ))}
             </div>
-
-            {/* --- ИНТЕРФЕЙС --- */}
             <div className="ui-container">
                 {selectedClass && (
                     <div className="selected-class-info">
@@ -145,8 +121,6 @@ const ClassSelectionPage = () => {
                     </>
                 )}
             </div>
-
-            {/* МОДАЛКА (без змін логіки, тільки типи) */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content--wide">

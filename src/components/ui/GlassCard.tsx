@@ -18,3 +18,4 @@ const GlassCard: React.FC<GlassCardProps> = ({ children, className }) => {
 };
 
 export default GlassCard;
+

@@ -5,7 +5,6 @@ import LandingHeader from '@/components/layout/LandingHeader';
 import { HeroSection } from '@/components/layout/HeroSection';
 import Image from 'next/image';
 
-// --- RevealOnScroll ---
 const RevealOnScroll = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +39,6 @@ const RevealOnScroll = ({ children, delay = 0 }: { children: React.ReactNode, de
   );
 };
 
-// --- COMPONENT: WORLD MAP (Features) ---
 const WorldMapSection = () => {
   const steps = [
     { id: 1, title: "The Fog of Chaos", desc: "Start here. Your tasks are a mess, and procrastination is the boss.", icon: "🌫️", color: "from-gray-500 to-slate-700" },
@@ -103,7 +101,6 @@ const WorldMapSection = () => {
   );
 };
 
-// --- COMPONENT: FAQ (Tavern Rumors) ---
 const FAQSection = () => {
   const faqs = [
     { question: "Is QuestLog free to play?", answer: "Yes! The core game is free. You can track quests, stats, and streaks without paying a single gold coin." },
@@ -153,8 +150,6 @@ const FAQSection = () => {
   );
 };
 
-
-// --- Step (For How to play) ---
 const Step = ({ num, title, text }: any) => (
   <div className="flex items-start gap-4">
     <div className="flex-shrink-0 w-12 h-12 bg-white border-b-4 border-gray-400 rounded flex items-center justify-center text-black font-bold text-xl font-pixel shadow-lg">
@@ -167,7 +162,6 @@ const Step = ({ num, title, text }: any) => (
   </div>
 );
 
-// --- MAIN PAGE ---
 export default function Page() {
   return (
     <div className="min-h-screen font-pixel selection:bg-white selection:text-black">

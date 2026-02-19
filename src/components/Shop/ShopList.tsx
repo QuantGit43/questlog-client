@@ -5,12 +5,9 @@ import { shopService } from '@/services/shopService';
 import { ShopItem } from '@/types/shop';
 import { useRouter } from 'next/navigation';
 import styles from './ShopList.module.css';
-
-// Прапорець: true = показуємо напис "Coming Soon", false = показуємо товари
 const IS_COMING_SOON = true; 
 
 export const ShopList = () => {
-    // Тестові дані
     const DUMMY_ITEMS: ShopItem[] = Array.from({ length: 8 }).map((_, i) => ({
         id: `dummy-${i}`, name: "Test Item", price: 50, slot: "Hand", assetId: "null", class: "Any", isRecommended: false
     }));
@@ -60,37 +57,24 @@ export const ShopList = () => {
 
     return (
         <div className={styles.container}>
-            {/* Фон */}
             <div className={styles.background} />
-
-            {/* Кнопка "Назад" (як в Інвентарі) */}
             <button className={styles.backArrowBtn} onClick={() => router.back()}>
                 ↩
             </button>
 
             <div className={styles.shopWrapper}>
-
-                {/* Ліхтарі */}
                 <div className={styles.lanterns}> 
                     <img src="/images/shop/lanterns.png" alt="Lanterns" />
                 </div>
-
-                {/* Вивіска */}
                 <div className={styles.sign}>
                     <span className={styles.signText}>Shop</span>
                 </div>
-
-                {/* Дошка */}
                 <div className={styles.board}>
-                    
-                    {/* --- COMING SOON НАПИС --- */}
                     {IS_COMING_SOON && (
                         <div className={styles.comingSoonOverlay}>
                             <h2 className={styles.comingSoonTitle}>COMING SOON</h2>
                         </div>
                     )}
-
-                    {/* Сітка товарів (прихована або під низом, якщо Coming Soon) */}
                     <div className={styles.grid} style={{ opacity: IS_COMING_SOON ? 0.1 : 1 }}>
                         
                         {loading ? (

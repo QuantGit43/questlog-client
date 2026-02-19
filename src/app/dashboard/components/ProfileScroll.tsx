@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 
-// 1. Створюємо тип для статів, щоб код був чистішим
 interface AvatarStats {
   strength: number;
   intellect: number;
@@ -10,11 +9,12 @@ interface AvatarStats {
   wisdom: number;
 }
 
+
+
 interface ProfileScrollProps {
   username: string;
   level: number;
   xpProgress: number;
-  // 2. Додаємо об'єкт stats у пропси
   stats: AvatarStats; 
   onLogout: () => void;
 }
@@ -23,7 +23,7 @@ export const ProfileScroll = ({
   username, 
   level, 
   xpProgress, 
-  stats, // Деструктуризуємо stats
+  stats,
   onLogout 
 }: ProfileScrollProps) => {
   return (
@@ -36,8 +36,6 @@ export const ProfileScroll = ({
     >
       <div
         className="w-72 h-[500px] bg-contain bg-no-repeat bg-center flex flex-col items-center pt-24 px-8 pb-12 text-[#5d4037]"
-        // Збільшив висоту h-[500px], щоб вмістити стати, якщо картинка дозволяє розтягування, 
-        // або залишіть h-[450px], якщо місця вистачає.
         style={{ backgroundImage: "url('/images/dashboard/paper.png')" }}
       >
         <div className="w-full text-center space-y-4">
@@ -47,8 +45,6 @@ export const ProfileScroll = ({
             </h2>
             <p className="text-sm font-semibold">Level {level}</p>
           </div>
-
-          {/* XP Bar */}
           <div className="w-full">
             <div className="flex justify-between text-[10px] font-bold mb-1 px-1">
               <span>XP</span>
@@ -62,26 +58,24 @@ export const ProfileScroll = ({
               />
             </div>
           </div>
-
-          {/* 3. Блок зі статами */}
           <div className="w-full py-2">
             <h3 className="text-xs font-bold uppercase opacity-70 mb-2 border-b border-[#8d6e63]/20">Attributes</h3>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-semibold">
               <div className="flex justify-between items-center group">
                 <span className="text-[10px] uppercase opacity-80">STR</span>
-                <span className="text-[#d32f2f]">{stats.strength}</span> {/* Червоний для сили */}
+                <span className="text-[#d32f2f]">{stats.strength}</span> 
               </div>
               <div className="flex justify-between items-center group">
                 <span className="text-[10px] uppercase opacity-80">INT</span>
-                <span className="text-[#1976d2]">{stats.intellect}</span> {/* Синій для інтелекту */}
+                <span className="text-[#1976d2]">{stats.intellect}</span> 
               </div>
               <div className="flex justify-between items-center group">
                 <span className="text-[10px] uppercase opacity-80">DEX</span>
-                <span className="text-[#388e3c]">{stats.dexterity}</span> {/* Зелений для спритності */}
+                <span className="text-[#388e3c]">{stats.dexterity}</span> 
               </div>
               <div className="flex justify-between items-center group">
                 <span className="text-[10px] uppercase opacity-80">WIS</span>
-                <span className="text-[#fbc02d] drop-shadow-sm">{stats.wisdom}</span> {/* Жовтий для мудрості */}
+                <span className="text-[#fbc02d] drop-shadow-sm">{stats.wisdom}</span>
               </div>
             </div>
           </div>

@@ -22,8 +22,6 @@ interface GameContextType {
   level: number;
   username: string;
   userClass: string; 
-  
-  // Характеристики
   strength: number;
   intellect: number;
   dexterity: number;
@@ -35,7 +33,6 @@ interface GameContextType {
   takeDamage: (amount: number) => void;
   addRewards: (earnedGold: number, earnedXp: number, x?: number, y?: number) => void;
   
-  // Керування модалками
   isCreateQuestOpen: boolean;
   setCreateQuestOpen: (isOpen: boolean) => void;
   
@@ -45,7 +42,6 @@ interface GameContextType {
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-// Функція мапінгу
 const mapAvatarClassToString = (cls?: AvatarClass | string | number): string => {
   if (cls === undefined || cls === null) return "warrior";
   if (typeof cls === 'string') {
@@ -72,7 +68,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [xp, setXp] = useState(0);
   const [userClass, setUserClass] = useState("warrior");
 
-  // Стейт для характеристик
   const [strength, setStrength] = useState(1);
   const [intellect, setIntellect] = useState(1);
   const [dexterity, setDexterity] = useState(1);
@@ -80,7 +75,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const [floatingTexts, setFloatingTexts] = useState<FloatingTextItem[]>([]);
   
-  // Стейт для відкритих модалок
   const [isCreateQuestOpen, setCreateQuestOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -156,6 +150,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     </GameContext.Provider>
   );
 }
+
+
 
 export const useGame = () => {
   const context = useContext(GameContext);

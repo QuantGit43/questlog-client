@@ -335,19 +335,16 @@
   align-items: center;
   justify-content: center;
   
-  /* Жодних фонів чи блюру, просто центруємо */
 }
 
 .comingSoonTitle {
   font-family: inherit;
-  font-size: 4rem; /* Дуже великий текст */
-  color: #3e2723; /* Темно-коричневий колір (під дерево) */
+  font-size: 4rem;
+  color: #3e2723; 
   text-transform: uppercase;
   margin: 0;
   letter-spacing: 4px;
   text-align: center;
-  
-  /* Світла обводка (text-shadow) щоб читалось на будь-якому фоні */
   text-shadow: 
     2px 2px 0px #eecfa1, 
     -2px -2px 0px #eecfa1,

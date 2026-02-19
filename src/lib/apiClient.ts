@@ -8,10 +8,8 @@ const apiClient = axios.create({
         'Content-Type': 'application/json',
     },
 });
-// === ДОДАЄМО АВТОМАТИЧНУ АВТОРИЗАЦІЮ ===
 apiClient.interceptors.request.use(
     (config) => {
-        // Перевіряємо, чи ми у браузері, перед доступом до localStorage
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem('token');
             

@@ -7,7 +7,6 @@ export const itemService = {
         try {
             const response = await apiClient.get('/api/Item/shop');
 
-            // Перевірки на масив
             if (Array.isArray(response.data)) return response.data;
             if (response.data && Array.isArray(response.data.items)) return response.data.items;
             if (response.data && Array.isArray(response.data.value)) return response.data.value;
@@ -20,7 +19,6 @@ export const itemService = {
         }
     },
 
-    // POST /api/Item/buy
     async buy(itemId: string): Promise<void> {
         await apiClient.post('/api/Item/buy', { itemId });
     },
@@ -35,3 +33,4 @@ export const itemService = {
         return [];
     }
 };
+

@@ -7,33 +7,20 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-[#2d1b4e] flex flex-col justify-center items-center text-center pt-10 font-pixel">
 
-      {/* --- 1. ФОН --- */}
       <div className="absolute inset-0 z-0">
-        {/* Градієнт неба */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#a56cc1] via-[#d6889f] to-[#5e3060]" />
-        
-        {/* Гори ПЗ */}
        <Image 
             src="/images/main_background.svg"
             alt="Pixel Landscape"
             fill
             priority
-            // quality={100}  <-- ВИДАЛИТИ ЦЕЙ РЯДОК
             style={{ imageRendering: 'pixelated' }} 
             className="object-cover object-bottom opacity-100"
          />
-         
-         {/* Затемнення знизу для переходу в контент */}
          <div className="absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-[#2d1b4e] to-transparent opacity-80" />
       </div>
-
-      {/* --- 2. КОНТЕНТ --- */}
       <div className="relative z-20 container mx-auto px-6 flex flex-col items-center">
-        
-        {/* БЛОК З ОСТРОВАМИ ТА ПЕРСОНАЖЕМ */}
         <div className="relative w-full max-w-4xl h-[300px] md:h-[450px] translate-y-12 md:translate-y-24 -mb-10">
-            
-            {/* Лівий острів */}
             <div className="absolute top-[10%] left-[10%] md:left-[10%] w-40 md:w-110 h-auto aspect-square animate-float-slow">
                  <Image 
                    src="/images/island_small.png" 
@@ -43,8 +30,6 @@ export const HeroSection = () => {
                    className="object-contain drop-shadow-2xl"
                 />
             </div>
-
-            {/* Правий острів */}
             <div className="absolute bottom-[-15%] right-[5%] md:right-[0%] w-72 md:w-145 h-auto aspect-square animate-float-delayed">
                 <Image 
                    src="/images/island_big.png" 
@@ -54,8 +39,6 @@ export const HeroSection = () => {
                    className="object-contain drop-shadow-2xl"
                 />
             </div>
-
-            {/* Персонаж */}
             <div className="absolute top-[-6%] left-[45%] -translate-x-1/2 w-24 md:w-48 aspect-square z-50 animate-float">
                 <Image 
                    src="/images/character.svg" 
@@ -66,8 +49,6 @@ export const HeroSection = () => {
                 />
             </div>
         </div>
-
-        {/* --- ТЕКСТ --- */}
         <div className="relative z-30 mt-10 md:mt-0 mb-10 md:mb-20">
             <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-wide leading-tight text-white drop-shadow-[3px_2px_0_#000]">
               Turn Your Life into an <br className="hidden md:block" /> Epic RPG.
@@ -77,8 +58,6 @@ export const HeroSection = () => {
               Ditch the boring to-do list. Complete real-life quests, defeat bad habits, 
               and level up your character.
             </p>
-
-            {/* --- КНОПКА START --- */}
             <Link href="/signup">
               <button 
                 className="
@@ -95,7 +74,6 @@ export const HeroSection = () => {
               </button>
             </Link>
         </div>
-
       </div>
     </section>
   );

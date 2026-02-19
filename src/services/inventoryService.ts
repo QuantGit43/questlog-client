@@ -7,23 +7,20 @@ export const inventoryService = {
         try {
             const response = await apiClient.get('/api/Inventory');
             
-            // 1. Якщо бекенд повернув чистий масив []
             if (Array.isArray(response.data)) {
                 return response.data;
             }
             
-            // 2. Якщо бекенд повернув об'єкт з полем items (пагінація) { items: [] }
             if (response.data && Array.isArray(response.data.items)) {
                 return response.data.items;
             }
 
-            // 3. Якщо бекенд повернув об'єкт з полем value (інколи буває в .NET)
             if (response.data && Array.isArray(response.data.value)) {
                 return response.data.value;
             }
 
             console.warn("Unexpected inventory response structure:", response.data);
-            return []; // Повертаємо пустий масив, щоб не ламати сайт
+            return [];
         } catch (error) {
             console.error("Failed to load inventory:", error);
             return [];
@@ -47,3 +44,4 @@ export const inventoryService = {
         await apiClient.post('/api/Inventory/use', { itemId });
     }
 };
+

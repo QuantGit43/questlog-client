@@ -24,7 +24,6 @@ export default function LoginPage() {
       const data = await authService.login({ email, password });
 
       if (data.token) {
-        // Успішний вхід -> йдемо в Dashboard
         login(data.token, data, "/dashboard");
       }
     } catch (err: any) {
@@ -87,3 +86,4 @@ export default function LoginPage() {
     </>
   );
 }
+
