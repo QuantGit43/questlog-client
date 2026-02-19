@@ -5,7 +5,6 @@ import { useRouter, usePathname } from "next/navigation";
 
 interface AuthContextType {
   user: any | null;
-  // Додаємо необов'язковий параметр redirectUrl
   login: (token: string, userData: any, redirectUrl?: string) => void;
   logout: () => void;
   isLoading: boolean;
@@ -38,14 +37,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
-  // ОНОВЛЕНА ФУНКЦІЯ LOGIN
-  // Якщо redirectUrl не передано, за замовчуванням йдемо в /dashboard
   const login = (token: string, userData: any, redirectUrl: string = "/dashboard") => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    
-    // Перехід за вказаною адресою
     router.push(redirectUrl);
   };
 
