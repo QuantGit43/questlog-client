@@ -22,7 +22,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     controls, floatingTexts, 
     setCreateQuestOpen, 
     isCreateQuestOpen,
-    isDetailsOpen, // <--- Використовуємо новий стейт 
+    isDetailsOpen,
     userClass 
   } = useGame(); 
   
@@ -42,8 +42,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("token");
     router.push("/auth/login");
   };
-
-  // Головний "рубильник" для приховування UI
   const hideUI = isCreateQuestOpen || isDetailsOpen;
 
   return (
@@ -57,8 +55,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       )}
 
       <FloatingTextLayer items={floatingTexts} />
-
-      {/* HEADER: Ховаємо, якщо відкрита модалка створення АБО деталей */}
       {!hideUI && (
         <header className="w-full p-4 flex justify-between items-start z-30 pointer-events-none absolute top-0 left-0">
             <div className="pointer-events-auto">
@@ -102,18 +98,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             onLogout={handleLogout} 
           />
       )}
-
-      {/* Головний контент (Дошка) */}
       <main className={`relative w-full h-full flex flex-col items-center justify-center pt-20 pb-32 px-4 pointer-events-none transition-all ${hideUI ? 'z-50' : 'z-10'}`}>
         <div className="pointer-events-auto w-full h-full flex items-center justify-center">
             {children}
         </div>
       </main>
-
-      {/* FOOTER: Ховаємо так само, як і хедер */}
       {!hideUI && (
         <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-6 z-40 pointer-events-auto">
-            <button onClick={() => router.push('/dashboard/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
+            <button onClick={() => router.push('/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
                 <img src="/images/Group shop.png" alt="Shop" className="h-16 md:h-20 w-auto object-contain" />
             </button>
             

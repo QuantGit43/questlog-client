@@ -9,8 +9,6 @@ export interface LoginResponse {
   userId: string;
   username: string;
   role: string;
-  hasAvatar: boolean; // <-- Додайте цей рядок!
-  // user: User;  <-- Цей рядок треба видалити, якщо бекенд більше не повертає вкладений об'єкт
 }
 
 export interface RegisterRequest {
@@ -20,3 +18,5 @@ export interface RegisterRequest {
 
   password?: string;
 }
+
+

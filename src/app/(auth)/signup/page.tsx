@@ -21,7 +21,6 @@ export default function SignupPage() {
     e.preventDefault();
     setError("");
 
-    // Валідація
     if (password.length < 6) {
       setError("Пароль має бути не менше 6 символів.");
       return;
@@ -38,7 +37,6 @@ export default function SignupPage() {
       const data = response.data;
 
       if (data && data.token) {
-        // Успішна реєстрація -> йдемо вибирати Клас
         login(data.token, data, "/class-selection");
       }
     } catch (err: any) {

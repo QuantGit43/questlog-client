@@ -42,28 +42,26 @@ export default function DashboardPage() {
         setCreateQuestOpen(false);
     };
 
-    // --- НОВІ ФУНКЦІЇ ДЛЯ КЕРУВАННЯ МОДАЛКОЮ ДЕТАЛЕЙ ---
     const handleOpenDetails = (task: Task) => {
         setSelectedTask(task);
-        if (setIsDetailsOpen) setIsDetailsOpen(true); // Ховаємо хедер/футер
+        if (setIsDetailsOpen) setIsDetailsOpen(true);
     };
 
     const handleCloseDetails = () => {
         setSelectedTask(null);
-        if (setIsDetailsOpen) setIsDetailsOpen(false); // Повертаємо хедер/футер
+        if (setIsDetailsOpen) setIsDetailsOpen(false);
     };
-    // ---------------------------------------------------
 
     const handleTaskComplete = (task: Task) => {
         addRewards(task.goldReward, task.xpReward, window.innerWidth / 2, window.innerHeight / 2);
         setTasks(prev => prev.filter(t => t.id !== task.id));
-        handleCloseDetails(); // Закриваємо модалку правильно
+        handleCloseDetails();
     };
 
     const handleTaskDelete = (taskId: string) => {
         takeDamage(20);
         setTasks(prev => prev.filter(t => t.id !== taskId));
-        handleCloseDetails(); // Закриваємо модалку правильно
+        handleCloseDetails();
     };
 
     return (
@@ -81,7 +79,6 @@ export default function DashboardPage() {
                     <AnimatePresence mode="popLayout">
                         {tasks.length > 0 ? (
                             tasks.map((task) => (
-                                // Використовуємо handleOpenDetails замість setSelectedTask безпосередньо
                                 <TaskCard key={task.id} task={task} onClick={handleOpenDetails} />
                             ))
                         ) : (
@@ -116,7 +113,7 @@ export default function DashboardPage() {
                     <div onClick={(e) => e.stopPropagation()}>
                         <DetailsModal 
                             task={selectedTask} 
-                            onClose={handleCloseDetails} // <-- Використовуємо нову функцію
+                            onClose={handleCloseDetails}
                             onComplete={handleTaskComplete}
                             onDelete={handleTaskDelete}
                         />

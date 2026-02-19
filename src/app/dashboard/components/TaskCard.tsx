@@ -6,6 +6,8 @@ interface TaskCardProps {
   onClick: (task: Task) => void;
 }
 
+
+
 export const TaskCard = ({ task, onClick }: TaskCardProps) => {
   return (
     <motion.div

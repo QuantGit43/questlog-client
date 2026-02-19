@@ -1,4 +1,3 @@
-/* ФОН И ОБЩИЙ КОНТЕЙНЕР */
 .inventory-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -14,10 +13,9 @@
     display: flex;
     align-items: center;
     gap: 120px;
-    transform: scale(1.1); /* Масштаб всего окна */
+    transform: scale(1.1); 
 }
 
-/* КНОПКА НАЗАД */
 .back-arrow-btn {
     position: absolute;
     top: 30px; left: 30px;
@@ -31,7 +29,6 @@
 }
 .back-arrow-btn:hover { transform: scale(1.1); color: #ffd700; }
 
-/* --- ЛЕВАЯ ЧАСТЬ (ПЕРСОНАЖ) --- */
 .character-section {
     position: relative;
     width: 300px;
@@ -41,7 +38,6 @@
     align-items: center;
 }
 
-/* ПЕРЕКЛЮЧАТЕЛЬ ПОЛА */
 .gender-switch-container {
     position: absolute;
     left: -170px;
@@ -71,7 +67,6 @@
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
 }
 
-/* ОСТРОВ И СБОРКА ПЕРСОНАЖА */
 .floating-island-container {
     position: relative;
     width: 100%; height: 100%;
@@ -87,31 +82,27 @@
     image-rendering: pixelated;
 }
 
-/* Контейнер для куклы (Paper Doll) */
 .preview-character {
     position: absolute;
-    bottom: 95px; /* Регулируй это, если перс летает над травой */
+    bottom: 95px; 
     left: 40%;
     transform: translateX(-50%);
-    width: 260px;  /* Ширина области персонажа */
-    height: 180px; /* Высота области персонажа */
+    width: 260px;  
+    height: 180px; 
     display: flex;
     justify-content: center;
 }
 
-/* Общий стиль для всех слоев */
 .doll-layer {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    object-fit: contain; /* Важно: картинка вписывается в блок */
+    object-fit: contain; 
     image-rendering: pixelated;
     pointer-events: none;
-    transition: all 0.1s ease; /* Плавность при ручной настройке */
+    transition: all 0.1s ease; 
 }
 
-/* --- ПОРЯДОК СЛОЕВ (Z-INDEX) --- */
-/* Чем больше число, тем выше слой */
 .layer-base   { z-index: 10; }
 .layer-eyes   { z-index: 55; }
 .layer-bottom { z-index: 20; }
@@ -124,7 +115,6 @@
     50% { transform: translateY(-10px); }
 }
 
-/* --- ПРАВАЯ ЧАСТЬ (ДОСКА) --- */
 .board-section {
     position: relative;
     width: 550px; height: 480px;
@@ -148,7 +138,6 @@
     padding-top: 20px;
 }
 
-/* ТАБЫ */
 .board-tabs {
     display: flex; gap: 10px;
     margin-bottom: 25px;
@@ -173,7 +162,6 @@
     box-shadow: 0 2px 0 #3e2714;
 }
 
-/* СЕТКА */
 .board-grid {
     width: 95%; height: 280px;
     display: grid;
@@ -184,7 +172,6 @@
     padding: 10px;
 }
 
-/* Скроллбар */
 .board-grid::-webkit-scrollbar { width: 8px; }
 .board-grid::-webkit-scrollbar-thumb { background: #5c3a1e; border-radius: 4px; }
 .board-grid::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
@@ -202,7 +189,6 @@
 
 .wood-slot img { width: 80%; height: 80%; object-fit: contain; image-rendering: pixelated; }
 
-/* КНОПКА SAVE */
 .wood-btn-create {
     margin-top: auto;
     background: #a06b35;

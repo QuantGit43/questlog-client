@@ -10,6 +10,7 @@ export type FloatingTextItem = {
   color: string;
 };
 
+
 interface FloatingTextLayerProps {
   items: FloatingTextItem[];
 }

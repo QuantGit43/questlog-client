@@ -1,4 +1,3 @@
-// 1. Enum для категорій (має збігатися з Backend)
 export enum TaskCategory {
     None = 0,
     
@@ -40,15 +39,12 @@ export interface AvatarDto {
   hp: number;
   maxHP: number;
   gold: number;
-  
-  // Характеристики
   strength: number;
   intellect: number;
   dexterity: number;
   wisdom: number;
 }
 
-// 2. Основна сутність завдання
 export interface Task {
     id: string;
     title: string;
@@ -65,29 +61,26 @@ export interface Task {
     createdAt?: string;
 }
 
-// 3. Запит на створення
 export interface CreateTaskRequest {
     title: string;
     description?: string;
     type: string;
     category: TaskCategory;
     dueDate?: string;
-    xpReward?: number;      // Нагорода, яку порахував AI
-    goldReward?: number;    // Золото, яке порахував AI
-    difficulty?: string;    // Складність (Easy/Medium/Hard)
+    xpReward?: number;      
+    goldReward?: number;    
+    difficulty?: string;    
 }
 
-// 4. Відповідь від AI-аналізатора
 export interface TaskComplexityResponse {
-   difficulty: string;  // "Easy", "Medium", ...
-    category: string;    // "Sport", "Career", ... (Приходить як рядок!)
-    dueDate?: string;    // "2026-02-20T..."
+   difficulty: string;  
+    category: string;    
+    dueDate?: string;   
     
     xpReward: number;
     goldReward: number;
 }
 
-// 5. Запит на оновлення
 export interface UpdateTaskRequest {
     title?: string;
     description?: string;
@@ -97,9 +90,8 @@ export interface UpdateTaskRequest {
     dueDate?: string;
 }
 
-// 6. Профіль користувача (для відображення зверху)
 export interface UserProfile {
-    username: string; // <--- Додано
+    username: string;
     gold: number;
     xp: number;
     hp: number;
@@ -111,8 +103,8 @@ export interface UserProfile {
     wisdom: number;
 }
 
-// 7. Відповідь при виконанні завдання (нові баланси)
 export interface CompleteTaskResponse {
     earnedGold: number;
     earnedXp: number;
 }
+

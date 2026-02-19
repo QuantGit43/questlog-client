@@ -15,6 +15,7 @@ interface GameItem {
     customStyle?: React.CSSProperties; 
 }
 
+
 const INVENTORY_ITEMS: GameItem[] = [
     { 
         id: 'male_hair_1', type: 'hair', gender: 'male', iconSrc: '/images/male_hair_1.png', layerSrc: '/images/male_hair_1.png',

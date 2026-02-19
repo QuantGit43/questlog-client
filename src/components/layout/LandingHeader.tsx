@@ -11,8 +11,6 @@ const LandingHeader = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
-      // Логіка: показуємо хедер, якщо скролимо вгору АБО якщо ми на самому верху сторінки (< 10px)
       if (currentScrollY < lastScrollY || currentScrollY < 10) {
         setIsVisible(true);
       } else {
@@ -35,15 +33,12 @@ const LandingHeader = () => {
         ${isVisible ? 'translate-y-0' : '-translate-y-full'} 
       `}
     >
-      <div className="container mx-auto px-6 h-16 flex justify-between items-center"> {/* Повернув h-20, щоб було просторіше */}
-        
-        {/* ЛОГОТИП */}
+      <div className="container mx-auto px-6 h-16 flex justify-between items-center">
         <div 
           className="flex items-center gap-2 group cursor-pointer" 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
            <div className="relative h-12 md:h-16 w-auto aspect-[3/1]"> 
-             {/* Переконайтеся, що шлях правильний: /icons/logo.svg або /logo.svg */}
              <Image 
                src="/icons/logo.svg" 
                alt="QuestLog Logo"
@@ -53,8 +48,6 @@ const LandingHeader = () => {
              />
            </div>
         </div>
-
-        {/* НАВІГАЦІЯ (Desktop) */}
         <nav className="hidden md:flex items-center gap-8">
           <Link href="#features" className="text-white/80 hover:text-white font-pixel text-lg hover:underline decoration-white underline-offset-4 transition-all">
             Features
@@ -62,13 +55,10 @@ const LandingHeader = () => {
           <Link href="#how-to-play" className="text-white/80 hover:text-white font-pixel text-lg hover:underline decoration-white underline-offset-4 transition-all">
             How to Play
           </Link>
-          {/* Додали посилання на нову секцію FAQ */}
           <Link href="#faq" className="text-white/80 hover:text-white font-pixel text-lg hover:underline decoration-white underline-offset-4 transition-all">
             FAQ
           </Link>
         </nav>
-
-        {/* КНОПКИ */}
         <div className="flex items-center gap-4">
           <Link href="/login">
             <button className="text-white font-pixel text-lg hover:text-gray-300 transition-colors px-4 py-2">

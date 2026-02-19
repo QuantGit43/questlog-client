@@ -1,5 +1,4 @@
-﻿/* --- 1. ГЛАВНЫЙ ФОН --- */
-.class-selection-wrapper {
+﻿.class-selection-wrapper {
     width: 100vw;
     height: 100vh;
     background-image: url('/images/background.png');
@@ -15,7 +14,6 @@
     position: relative;
 }
 
-/* --- 2. СЛОЙ ДЕКОРАЦИЙ (Пропы) --- */
 .scene-container {
     position: absolute;
     top: 0;
@@ -31,17 +29,16 @@
     object-fit: contain;
 }
 
-/* ОСТРОВ ЦЕЛИТЕЛЯ (Новый!) */
 .prop-healer-island {
     top: 78%;
     left: 0%;
-    width: 25vw; /* Чуть увеличил, чтобы герою было удобно */
+    width: 25vw;
     max-width: 380px;
     z-index: 2;
     animation: floatIsland 6s ease-in-out infinite;
 }
 
-/* ОСТРОВ СТРОИТЕЛЯ (Большой) */
+
 .prop-builder-island {
     top: 20%;
     left: 12%;
@@ -51,7 +48,6 @@
     animation: floatIsland 8s ease-in-out infinite reverse;
 }
 
-/* ДРАКОН (Воина) */
 .prop-dragon {
     top: 0%;
     right: -2%;
@@ -61,7 +57,6 @@
     animation: floatDragon 5s ease-in-out infinite;
 }
 
-/* Анимации покачивания */
 @keyframes floatIsland {
     0%, 100% {
         transform: translateY(0);
@@ -83,7 +78,6 @@
 }
 
 
-/* --- 3. СЛОЙ ГЕРОЕВ --- */
 .hero-overlay-container {
     position: absolute;
     top: 0;
@@ -108,18 +102,14 @@
         z-index: 10;
     }
 
-/* --- КООРДИНАТЫ ГЕРОЕВ (Финальная подгонка) --- */
-
-/* ХИЛЕР (Стоит на новом healer_island.png) */
 .hero-healer {
-    top: 52%; /* Поставил на новый остров */
-    left: 10%; /* Центруем */
+    top: 52%; 
+    left: 10%; 
     width: 24vh;
     z-index: 6;
-    animation: floatIsland 7s ease-in-out infinite; /* Двигается с островом */
+    animation: floatIsland 7s ease-in-out infinite; 
 }
 
-/* СТРОИТЕЛЬ (Стоит на prop-island.png) */
 .hero-crafter {
     top: 39%;
     left: 29%;
@@ -128,7 +118,6 @@
     animation: floatIsland 8s ease-in-out infinite reverse;
 }
 
-/* ВОИН (Сидит на Драконе) */
 .hero-warrior {
     top: 12%;
     right: 15%;
@@ -142,7 +131,6 @@
         transform: scale(1.05) rotate(-10deg);
     }
 
-/* МАГ (Внизу справа) */
 .hero-mage {
     bottom: -3%;
     right: 12%;
@@ -151,8 +139,6 @@
     animation: floatIsland 4s ease-in-out infinite;
 }
 
-
-/* --- UI (ИНТЕРФЕЙС) --- */
 .ui-container {
     z-index: 20;
     position: relative;
@@ -178,7 +164,6 @@
     color: #ffd700;
 }
 
-/* СТИЛИ МОДАЛКИ (Без изменений) */
 .modal-overlay {
     position: fixed;
     top: 0;
