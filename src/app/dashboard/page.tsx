@@ -16,7 +16,7 @@ export default function DashboardPage() {
         takeDamage, 
         isCreateQuestOpen, 
         setCreateQuestOpen,
-        setIsDetailsOpen // <--- ДІСТАЄМО НОВИЙ СТЕЙТ
+        setIsDetailsOpen
     } = useGame();
 
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -100,25 +100,22 @@ export default function DashboardPage() {
                 </div>
             </div>
 
+            {/* ВАЖЛИВО: Тут більше немає зовнішнього div з bg-black. Ми просто рендеримо компонент */}
             {isCreateQuestOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <CreateModal onClose={() => setCreateQuestOpen(false)} onCreated={handleTaskCreated} />
-                    </div>
-                </div>
+                <CreateModal 
+                    onClose={() => setCreateQuestOpen(false)} 
+                    onCreated={handleTaskCreated} 
+                />
             )}
             
+            {/* Те саме для DetailsModal */}
             {selectedTask && (
-                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <DetailsModal 
-                            task={selectedTask} 
-                            onClose={handleCloseDetails}
-                            onComplete={handleTaskComplete}
-                            onDelete={handleTaskDelete}
-                        />
-                    </div>
-                </div>
+                <DetailsModal 
+                    task={selectedTask} 
+                    onClose={handleCloseDetails}
+                    onComplete={handleTaskComplete}
+                    onDelete={handleTaskDelete}
+                />
             )}
         </>
     );
