@@ -9,8 +9,6 @@ interface AvatarStats {
   wisdom: number;
 }
 
-
-
 interface ProfileScrollProps {
   username: string;
   level: number;
@@ -85,7 +83,7 @@ export const ProfileScroll = ({
               onClick={onLogout}
               className="group opacity-80 hover:opacity-100 transition-opacity flex justify-center"
             >
-              <img src="/images/dashboard/LogOut.png" alt="Logout" className="w-24 h-8 object-contain" />
+              <img src="/images/dashboard/Logout.png" alt="Logout" className="w-24 h-8 object-contain" />
             </button>
           </div>
         </div>
