@@ -15,7 +15,8 @@ export default function DashboardPage() {
         addRewards, 
         takeDamage, 
         isCreateQuestOpen, 
-        setCreateQuestOpen 
+        setCreateQuestOpen,
+        setIsDetailsOpen // <--- ДІСТАЄМО НОВИЙ СТЕЙТ
     } = useGame();
 
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -41,16 +42,28 @@ export default function DashboardPage() {
         setCreateQuestOpen(false);
     };
 
+    // --- НОВІ ФУНКЦІЇ ДЛЯ КЕРУВАННЯ МОДАЛКОЮ ДЕТАЛЕЙ ---
+    const handleOpenDetails = (task: Task) => {
+        setSelectedTask(task);
+        if (setIsDetailsOpen) setIsDetailsOpen(true); // Ховаємо хедер/футер
+    };
+
+    const handleCloseDetails = () => {
+        setSelectedTask(null);
+        if (setIsDetailsOpen) setIsDetailsOpen(false); // Повертаємо хедер/футер
+    };
+    // ---------------------------------------------------
+
     const handleTaskComplete = (task: Task) => {
         addRewards(task.goldReward, task.xpReward, window.innerWidth / 2, window.innerHeight / 2);
         setTasks(prev => prev.filter(t => t.id !== task.id));
-        setSelectedTask(null);
+        handleCloseDetails(); // Закриваємо модалку правильно
     };
 
     const handleTaskDelete = (taskId: string) => {
         takeDamage(20);
-      setTasks(prev => prev.filter(t => t.id !== taskId));
-        setSelectedTask(null);
+        setTasks(prev => prev.filter(t => t.id !== taskId));
+        handleCloseDetails(); // Закриваємо модалку правильно
     };
 
     return (
@@ -68,7 +81,8 @@ export default function DashboardPage() {
                     <AnimatePresence mode="popLayout">
                         {tasks.length > 0 ? (
                             tasks.map((task) => (
-                                <TaskCard key={task.id} task={task} onClick={setSelectedTask} />
+                                // Використовуємо handleOpenDetails замість setSelectedTask безпосередньо
+                                <TaskCard key={task.id} task={task} onClick={handleOpenDetails} />
                             ))
                         ) : (
                             <motion.div 
@@ -102,7 +116,7 @@ export default function DashboardPage() {
                     <div onClick={(e) => e.stopPropagation()}>
                         <DetailsModal 
                             task={selectedTask} 
-                            onClose={() => setSelectedTask(null)} 
+                            onClose={handleCloseDetails} // <-- Використовуємо нову функцію
                             onComplete={handleTaskComplete}
                             onDelete={handleTaskDelete}
                         />

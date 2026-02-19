@@ -1,4 +1,3 @@
-// app/dashboard/useDashboardGame.ts
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAnimation } from "framer-motion";
@@ -17,17 +16,14 @@ export const useDashboardGame = () => {
   const router = useRouter();
   const controls = useAnimation();
 
-  // User State
   const [username, setUsername] = useState("Hero");
   const [hp, setHp] = useState(100);
   const [gold, setGold] = useState(0);
   const [xp, setXp] = useState(0);
   const [tasks, setTasks] = useState<Task[]>([]);
   
-  // UI State
   const [floatingTexts, setFloatingTexts] = useState<FloatingTextItem[]>([]);
 
-  // Computed
   const level = Math.floor(xp / 100) + 1;
   const xpProgress = xp % 100;
 

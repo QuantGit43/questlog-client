@@ -21,7 +21,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     strength, intellect, dexterity, wisdom, 
     controls, floatingTexts, 
     setCreateQuestOpen, 
-    isCreateQuestOpen, 
+    isCreateQuestOpen,
+    isDetailsOpen, // <--- Використовуємо новий стейт 
     userClass 
   } = useGame(); 
   
@@ -42,6 +43,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     router.push("/auth/login");
   };
 
+  // Головний "рубильник" для приховування UI
+  const hideUI = isCreateQuestOpen || isDetailsOpen;
+
   return (
     <motion.div
       animate={controls}
@@ -54,7 +58,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
       <FloatingTextLayer items={floatingTexts} />
 
-      {!isCreateQuestOpen && (
+      {/* HEADER: Ховаємо, якщо відкрита модалка створення АБО деталей */}
+      {!hideUI && (
         <header className="w-full p-4 flex justify-between items-start z-30 pointer-events-none absolute top-0 left-0">
             <div className="pointer-events-auto">
                 <button onClick={() => router.push("/dashboard")}>
@@ -69,7 +74,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     </div>
                     
                     <div className="flex items-center gap-4 mt-1">
-                        {/* Тільки золото */}
                         <div className="flex items-center gap-1 text-yellow-400 font-bold text-lg drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)]">
                             <span>{gold}</span>
                             <div className="w-4 h-4 bg-yellow-500 rounded-full border border-yellow-700 shadow-sm" />
@@ -91,7 +95,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         </header>
       )}
 
-      {isProfileOpen && !isCreateQuestOpen && (
+      {isProfileOpen && !hideUI && (
           <ProfileScroll 
             username={username} level={level} xpProgress={xpProgress} 
             stats={{ strength, intellect, dexterity, wisdom }}
@@ -99,15 +103,17 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           />
       )}
 
-      <main className={`relative w-full h-full flex flex-col items-center justify-center pt-20 pb-32 px-4 pointer-events-none transition-all ${isCreateQuestOpen ? 'z-50' : 'z-10'}`}>
+      {/* Головний контент (Дошка) */}
+      <main className={`relative w-full h-full flex flex-col items-center justify-center pt-20 pb-32 px-4 pointer-events-none transition-all ${hideUI ? 'z-50' : 'z-10'}`}>
         <div className="pointer-events-auto w-full h-full flex items-center justify-center">
             {children}
         </div>
       </main>
 
-      {!isCreateQuestOpen && (
+      {/* FOOTER: Ховаємо так само, як і хедер */}
+      {!hideUI && (
         <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-6 z-40 pointer-events-auto">
-            <button onClick={() => router.push('/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
+            <button onClick={() => router.push('/dashboard/shop')} className="hover:-translate-y-1 active:scale-95 transition-transform filter drop-shadow-lg">
                 <img src="/images/Group shop.png" alt="Shop" className="h-16 md:h-20 w-auto object-contain" />
             </button>
             
