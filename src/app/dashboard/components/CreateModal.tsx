@@ -97,7 +97,7 @@ const fetchAiComplexity = useCallback(
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="relative w-[500px] h-[550px] bg-no-repeat bg-contain bg-center flex flex-col items-center px-12 py-10 text-[#3e2723] font-pixel"
-        style={{ backgroundImage: "url('/images/dashboard/Frame.png')" }} 
+        style={{ backgroundImage: "url('/images/dashboard/frame.png')" }} 
       >
         <button 
             onClick={onClose} 
